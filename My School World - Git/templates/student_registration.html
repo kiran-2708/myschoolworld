@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50">
+    <header class="sticky top-0 z-50 bg-gradient-to-r from-slate-800 to-slate-900 shadow-lg border-b border-gray-200">
+        <div class="container mx-auto px-2 md:px-4 py-2 md:py-3">
+          <div class="flex items-center justify-between px-2 md:px-20">
+            <!-- School Logo and Name -->
+            <div class="flex items-center space-x-2">
+              <a href="#" class="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+                <svg class="w-6 h-6 md:w-8 md:h-8 text-yellow-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" fill="currentColor"/>
+                </svg>
+                <div class="flex flex-col items-end">
+                  <h1 class="text-base sm:text-lg md:text-lg font-extrabold text-yellow-400">Greenwood High School</h1>
+                  <p class="text-[10px] sm:text-xs md:text-sm text-secondary-500 text-right mt-1">Excellence in Education</p>
+                </div>
+              </a>
+            </div>
+      
+            <!-- Desktop Buttons -->
+            <div class="hidden md:flex items-center space-x-2">
+            <form action="{{ url_for('staff_dashboard') }}">
+                <button class="flex items-center space-x-1 sm:space-x-2 text-white px-3 py-1.5 rounded bg-gradient-to-r from-blue-500 to-blue-700 text-xs sm:text-sm font-semibold 
+                    hover:from-blue-600 hover:to-blue-800 hover:scale-105 focus:outline-none transition duration-300 ease-in-out">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </button>
+            </form>
+            <form action="{{ url_for('students_details_in_staff') }}">
+                <button class="flex items-center space-x-1 sm:space-x-2 text-white px-3 py-1.5 rounded bg-gradient-to-r from-green-500 to-green-700 text-xs sm:text-sm font-semibold 
+                    hover:from-green-600 hover:to-green-800 hover:scale-105 focus:outline-none transition duration-300 ease-in-out">
+                    <i class="fas fa-user-graduate mr-2"></i>
+                    <span>Students Details</span>
+                </button>
+            </form>           
+      
+              <div class="relative">
+                <button id="profileDropdown" class="flex items-center space-x-1 sm:space-x-2 text-white px-3 py-1.5 rounded bg-gradient-to-r from-orange-400 to-amber-500 text-xs sm:text-sm font-semibold 
+                  hover:from-orange-500 hover:to-amber-600 hover:scale-105 focus:outline-none transition duration-300 ease-in-out">
+                  <i class="fas fa-chalkboard-teacher"></i>
+                  <span>Staff</span>
+                  <svg class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200">
+                  <a href="#" class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700">User</a>
+                  <a href="#" class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700">Change Password</a>
+                  <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700">Logout</a>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Mobile Toggler Button -->
+            <button class="md:hidden relative" onclick="toggleMenu()">
+              <svg class="w-6 h-6 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+              <div id="mobileMenu" class="hidden absolute right-0 mt-2 w-48 bg-slate-900 rounded-lg shadow-lg py-2 z-50">
+                <a href="{{ url_for('staff_dashboard') }}" class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300" onclick="closeMenu()"> <i class="fas fa-home"></i> Home</a>
+                <a href="{{ url_for('students_details_in_staff') }}" class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300" onclick="closeMenu()">
+                    <i class="fas fa-user-graduate mr-2"></i>Students Details
+                  </a>
+                <div class="border-t border-slate-700 my-2"></div>
+               
+             
+                <a href="#" class="block px-4 py-2 text-sm text-rose-500 hover:bg-primary-50 hover:text-primary-200">User</a>
+                <a href="#" class="block px-4 py-2 text-sm text-rose-500 hover:bg-primary-50 hover:text-primary-200">Change Password</a>
+                <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-sm text-rose-500 hover:bg-primary-50 hover:text-primary-200">Logout</a>
+             
+              </div>
+            </button>
+          </div>
+        </div>
+      </header>
+      
+    <div>
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text">Student Registration Form</h2>
+                
+                <form action="{{ url_for('student_registration') }}" method="POST" class="space-y-6" id="studentRegistrationForm">
+                    <!-- School and Staff Information -->
+                    <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4 text-blue-700">School and Staff Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {% if school_ID %}
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">School ID </label>
+                                    <input type="text" class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 text-gray-600 cursor-not-allowed" value="{{ school_ID }}" disabled required>
+                                </div>
+                            {% endif %}
+                            {% if staff_ID %}
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Staff ID</label>
+                                    <input type="text" class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 text-gray-600 cursor-not-allowed" value="{{  staff_ID }}" disabled required>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Student Basic Information -->
+                    <div class="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4 text-green-700">Student Basic Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Roll No. <span class="text-red-500">*</span></label>
+                                <input type="text" name="roll_number" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent " placeholder="Enter Roll Number" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Student Name<span class="text-red-500">*</span></label>
+                                <input type="text" name="student_name" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" required placeholder="Enter Student Name">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth <span class="text-red-500">*</span></label>
+                                <input type="date" name="date_of_birth" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            </div>
+                            <!-- <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Attendance (%) <span class="text-red-500">*</span></label>
+                                <input type="number" name="attendance" pattern="[0-9]{3}"  min="0" max="100" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" required placeholder="Enter Attendence ">
+                            </div> -->
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Blood Group <span class="text-red-500">*</span></label>
+                                <select name="blood_group" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" >
+                                    <option value="">Select Blood Group</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                    <option value="Bombay">Bombay Blood Group</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Date of Joining <span class="text-red-500">*</span></label>
+                                <input type="date" name="date_of_joining" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Gender <span class="text-red-500">*</span></label></label>
+                                <select name="gender" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other's">Other's</option>
+                                </select>
+                            </div>
+                            {%  if standard %}
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Standard</label>
+                                    <input type="text" class="w-full px-4 py-2 text-start rounded-lg border border-gray-300 bg-gray-100 text-gray-600 cursor-not-allowed" value="{{ standard }}" disabled >
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Student Contact Information -->
+                    <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4 text-purple-700">Student Contact Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Student Aadhar Number <span class="text-red-500">*</span></label>
+                                <input type="text" name="student_aadhar" pattern="[0-9]{12}" maxlength="12" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" required placeholder="Enter Student Aadhar Number">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Student Email <span class="text-gray-500">(optional)</span></label>
+                                <input type="email" name="student_email" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Student Email" >
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Student Mobile Number <span class="text-gray-500">(optional)</span></label>
+                                <input type="tel" name="student_mobile" pattern="[0-9]{10}" maxlength="10" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Student Mobile Number" >
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Resident Type  <span class="text-red-500">*</span></label>
+                                <select name="resident_type" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" required >
+                                    <option value="">Select Type</option>
+                                    <option value="Hostler">Hostler</option>
+                                    <option value="Day Scholar">Day Scholar</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Contact Email <span class="text-gray-500">(optional)</span></label>
+                                <input type="email" name="contact_email" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Contact Email" >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Parent/Guardian Selection -->
+                    <div class="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4 text-amber-700">Select Parent or Guardian</h3>
+                        <div class="flex space-x-6 mb-6">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="parent_or_guardian" value="parent" class="form-radio h-5 w-5 text-blue-600" checked>
+                                <span class="ml-2 text-gray-700">Parent</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="parent_or_guardian" value="guardian" class="form-radio h-5 w-5 text-blue-600">
+                                <span class="ml-2 text-gray-700">Guardian</span>
+                            </label>
+                        </div>
+
+                        <!-- Parent Information Container -->
+                        <div id="parentInfo" class="space-y-6">
+                            <!-- Father's Information -->
+                            <div class="space-y-6">
+                                <h4 class="text-md font-semibold text-amber-700">Father's Information</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Father's Name</label>
+                                        <input type="text" name="father_name" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Father's Name">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Father's Aadhar Number</label>
+                                        <input type="text" name="father_aadhar" pattern="[0-9]{12}" maxlength="12" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Father's Aadhar Number">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Father's Mobile Number</label>
+                                        <input type="tel" name="father_mobile" pattern="[0-9]{10}" maxlength="10" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Father's Mobile Number" >
+                                    </div>
+                                   
+                                </div>
+                            </div>
+
+                            <!-- Mother's Information -->
+                            <div class="space-y-6">
+                                <h4 class="text-md font-semibold text-amber-700">Mother's Information</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Name</label>
+                                        <input type="text" name="mother_name" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Mother's Name" >
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Aadhar Number</label>
+                                        <input type="text" name="mother_aadhar" pattern="[0-9]{12}" maxlength="12" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Mother's Aadhar Number" >
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Mother's Mobile Number</label>
+                                        <input type="tel" name="mother_mobile" pattern="[0-9]{10}" maxlength="10" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Mother's Mobile Number">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Guardian Information Container -->
+                        <div id="guardianInfo" class="space-y-6 hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Guardian's Name <span class="text-red-500">*</span></label>
+                                    <input type="text" name="guardian_name" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Guardian's Name">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Guardian's Aadhar Number <span class="text-red-500">*</span></label>
+                                    <input type="text" name="guardian_aadhar" pattern="[0-9]{12}" maxlength="12" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Guardian's Aadhar Number ">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Guardian's Mobile Number <span class="text-red-500">*</span></label>
+                                    <input type="tel" name="guardian_mobile" pattern="[0-9]{10}" maxlength="10" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Guardian's Mobile Number">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Relationship with Student <span class="text-red-500">*</span></label>
+                                    <input type="text" name="relation" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter Relationship with Student">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="bg-gradient-to-r from-indigo-50 to-blue-50 p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-700">Address Information</h3>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Address<span class="text-red-500">*</span></label>
+                            <textarea rows="3" name="address" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"   placeholder="Enter Student Permanant Address" required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="flex justify-center">
+                        <button type="submit" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                            Register Student
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <!-- <img src="./assects/images/schoolname.avif" alt="School Logo" class="h-16 w-16 object-contain mb-4"> -->
+                    <h3 class="text-xl font-bold mb-4">Greenwood High School</h3>
+                    <p class="text-gray-400 mb-4">Providing quality education since 1995. Our mission is to nurture young minds and prepare them for the future.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Admissions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Academics</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                            <span>123 Education Ave, Greenwood, CA 90210</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-2"></i>
+                            <span>(555) 123-4567</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2"></i>
+                            <span>info@greenwoodhigh.edu</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                  <h4 class="text-lg font-semibold mb-4">Follow us </h4>
+                    <div class=" space-x-4">
+                      <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                      <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                      <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                      <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                  </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-center items-center">
+     
+                <p>&copy; 2025 &nbsp;Greenwood High School. All rights reserved.</p>
+                <p>&nbsp; | &nbsp;</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+   <!-- JavaScript for Dropdown -->
+   <script src="../static/js/student_registration.js"></script>
+</body>
+</body>
+</html>

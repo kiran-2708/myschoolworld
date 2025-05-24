@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MySchool - Learn with Joy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../static/css/index.css">
+</head>
+<body class="bg-gradient-to-br from-slate-100 via-emerald-50 to-lime-100 text-slate-800 font-sans">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-slate-800 to-slate-900 text-white sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <svg class="w-8 h-8 text-yellow-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" fill="currentColor"/>
+        </svg>
+        <h1 class="text-3xl font-extrabold text-yellow-400">MySchool</h1>
+      </div>
+
+      <!-- Login Buttons -->
+      <div class="hidden md:flex space-x-2">
+        <a href="{{ url_for('student_login') }}" class="px-3 py-1 rounded bg-gradient-to-r from-fuchsia-500 to-pink-600 text-white font-semibold flex items-center space-x-1">
+          <i class="fas fa-user-graduate"></i>
+          <span>Student</span>
+        </a>
+        <a href="{{ url_for('parent_login') }}" class="px-3 py-1 rounded bg-gradient-to-r from-emerald-500 to-emerald-700 text-white font-semibold flex items-center space-x-1">
+          <i class="fas fa-users"></i>
+          <span>Parents</span>
+        </a>
+        <a href="{{ url_for('staff_login') }}" class="px-3 py-1 rounded bg-gradient-to-r from-orange-400 to-amber-500 text-white font-semibold flex items-center space-x-1">
+          <i class="fas fa-chalkboard-teacher"></i>
+          <span>Staff</span>
+        </a>
+        <a href="{{ url_for('admin_login') }}" class="px-3 py-1 rounded bg-gradient-to-r from-blue-500 to-blue-700 text-white font-semibold flex items-center space-x-1">
+          <i class="fas fa-user-shield"></i>
+          <span>Admin</span>
+        </a>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="md:hidden relative" onclick="toggleMenu()">
+        <svg class="w-6 h-6 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden absolute right-0 mt-2 w-48 bg-slate-900 rounded-lg shadow-lg py-2 z-50">
+          <a href="#mainhome" id="menu" class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300" onclick="closeMenu()">Home</a>
+          <a href="#about" id="menu" class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300" onclick="closeMenu()">About</a>
+          <a href="#courses" id="menu" class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300" onclick="closeMenu()">Departments</a>
+          <a href="#contact" id="menu" class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300" onclick="closeMenu()">Contact</a>
+          <div class="border-t border-slate-700 my-2"></div>
+          <a href="{{ url_for('student_login') }}" id="menu" class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300" onclick="closeMenu()">
+            <i class="fas fa-user-graduate mr-2"></i>Student
+          </a>
+          <a href="{{ url_for('parent_login') }}" id="menu" class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300" onclick="closeMenu()">
+            <i class="fas fa-users mr-2"></i>Parents
+          </a>
+          <a href="{{ url_for('staff_login') }}" id="menu" class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300" onclick="closeMenu()">
+            <i class="fas fa-chalkboard-teacher mr-2"></i>Staff
+          </a>
+          <a href="{{ url_for('admin_login') }}" id="menu" class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300" onclick="closeMenu()">
+            <i class="fas fa-user-shield mr-2"></i>Admin
+          </a>
+        </div>
+      </button>
+    </div>
+
+   
+    <!-- Tab Navigation -->
+    <div class="hidden md:block bg-white shadow-md">
+      <div class="max-w-7xl mx-auto px-4">
+        <div id="menu" class="flex justify-center space-x-2 py-3">
+          <a href="#mainhome" id="menu" class="text-slate-700 hover:text-emerald-600 text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 relative group active:scale-95 active:bg-emerald-50 hover:bg-emerald-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 whitespace-nowrap">
+            <span class="relative z-10">Home</span>
+            <div class="absolute inset-0 border-2 border-emerald-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute inset-0 bg-emerald-50 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></div>
+          </a>
+          <a href="#about" id="menu" class="text-slate-700 hover:text-emerald-600 text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 relative group active:scale-95 active:bg-emerald-50 hover:bg-emerald-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 whitespace-nowrap">
+            <span class="relative z-10">About</span>
+            <div class="absolute inset-0 border-2 border-emerald-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute inset-0 bg-emerald-50 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></div>
+          </a>
+          <a href="#courses" id="menu" class="text-slate-700 hover:text-emerald-600 text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 relative group active:scale-95 active:bg-emerald-50 hover:bg-emerald-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 whitespace-nowrap">
+            <span class="relative z-10">Departments</span>
+            <div class="absolute inset-0 border-2 border-emerald-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute inset-0 bg-emerald-50 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></div>
+          </a>
+          <a href="#contact" id="menu" class="text-slate-700 hover:text-emerald-600 text-sm font-medium px-3 py-1.5 rounded-lg transition-all duration-300 relative group active:scale-95 active:bg-emerald-50 hover:bg-emerald-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 whitespace-nowrap">
+            <span class="relative z-10">Contact</span>
+            <div class="absolute inset-0 border-2 border-emerald-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute inset-0 bg-emerald-50 rounded-lg scale-0 group-hover:scale-100 transition-transform duration-300"></div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Announcement Marquee -->
+    <div class="bg-yellow-100 py-2">
+      <marquee class="text-slate-800 font-medium" scrollamount="5">
+        🎓 Welcome to the new academic year! | 📚 Library Week starts next Monday | 🏆 Congratulations to our Science Olympiad winners | 📅 Parent-Teacher meetings scheduled for next week | 🎨 Art Exhibition this Friday
+      </marquee>
+    </div>
+  </header>
+
+  <!-- Carousel -->
+  <div class="relative overflow-hidden " id="mainhome">
+    <div class="carousel-container h-80 md:h-[500px] w-full relative">
+        <!-- Carousel Items -->
+        <div class="carousel-item absolute inset-0 flex items-center justify-center bg-blue-900 transition-opacity duration-1000 opacity-100">
+            <div class="text-center text-white px-4">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4 animate-bounce">Welcome to Greenwood High</h2>
+                <p class="text-xl md:text-2xl mb-8">Shaping futures through quality education</p>
+                <button class="bg-white text-blue-800 px-8 py-3 rounded-full font-medium hover:bg-blue-100 transition duration-300 border-2 border-white hover:border-blue-300 text-lg">Explore More</button>
+            </div>
+        </div>
+        <div class="carousel-item absolute inset-0 flex items-center justify-center bg-green-800 transition-opacity duration-1000 opacity-0">
+            <div class="text-center text-white px-4">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">Admissions Open</h2>
+                <p class="text-xl md:text-2xl mb-8">2023-24 Academic Year</p>
+                <button class="bg-white text-green-800 px-8 py-3 rounded-full font-medium hover:bg-green-100 transition duration-300 border-2 border-white hover:border-green-300 text-lg">Apply Now</button>
+            </div>
+        </div>
+        <div class="carousel-item absolute inset-0 flex items-center justify-center bg-purple-800 transition-opacity duration-1000 opacity-0">
+            <div class="text-center text-white px-4">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">State-of-the-Art Facilities</h2>
+                <p class="text-xl md:text-2xl mb-8">Modern classrooms, labs, and sports facilities</p>
+                <button class="bg-white text-purple-800 px-8 py-3 rounded-full font-medium hover:bg-purple-100 transition duration-300 border-2 border-white hover:border-purple-300 text-lg">Virtual Tour</button>
+            </div>
+        </div>
+        
+        <!-- Carousel Indicators -->
+        <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
+            <button class="carousel-indicator w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-100 transition" data-index="0"></button>
+            <button class="carousel-indicator w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-100 transition" data-index="1"></button>
+            <button class="carousel-indicator w-3 h-3 rounded-full bg-white bg-opacity-50 hover:bg-opacity-100 transition" data-index="2"></button>
+        </div>
+        
+        <!-- Navigation Arrows -->
+        <button class="carousel-prev absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-30 text-white p-2 rounded-full hover:bg-opacity-50 transition">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="carousel-next absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-30 text-white p-2 rounded-full hover:bg-opacity-50 transition">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+</div>
+
+  <!-- Home Section -->
+  <section id="home" class="text-center py-12">
+    <h2 class="text-4xl font-bold text-emerald-700 mb-4">Welcome to MySchool</h2>
+    <p class="text-slate-700 max-w-xl mx-auto">
+      Where creativity meets learning. Our school nurtures young minds with play, values, and innovation.
+    </p>
+  </section>
+
+  <!-- About Us -->
+  <section id="about" class="bg-emerald-50 py-12 text-center">
+    <h2 class="text-3xl font-bold text-emerald-700 mb-4">About Us</h2>
+    <p class="text-slate-700 max-w-2xl mx-auto">
+      MySchool provides an engaging, inclusive environment for students in Kindergarten through Grade 8.
+      Our focus is holistic development through activity-based learning.
+    </p>
+  </section>
+
+  <!-- Courses / Departments -->
+  <section id="courses" class="py-12">
+    <h2 class="text-3xl font-bold text-center text-emerald-700 mb-6">Departments</h2>
+    <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-6 px-4">
+      <div class="bg-yellow-200 p-6 rounded-lg shadow text-center">
+        <h3 class="text-xl font-semibold mb-2">Early Years</h3>
+        <p>Fun-filled basics with stories, music, and games for KG to Grade 2.</p>
+      </div>
+      <div class="bg-teal-200 p-6 rounded-lg shadow text-center">
+        <h3 class="text-xl font-semibold mb-2">Elementary</h3>
+        <p>Active learning with STEM, languages, and social skills for Grades 3–5.</p>
+      </div>
+      <div class="bg-lime-200 p-6 rounded-lg shadow text-center">
+        <h3 class="text-xl font-semibold mb-2">Middle School</h3>
+        <p>Encouraging leadership, logic, and responsibility for Grades 6–8.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Campuses Section -->
+  <section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold text-center mb-12">Why MySchool</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <!-- Main Campus -->
+            <div class="relative h-96 rounded-lg overflow-hidden group">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" 
+                     style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')">
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-50 group-hover:bg-opacity-40 transition-all duration-300"></div>
+                <div class="absolute inset-0 flex flex-col justify-end p-6 text-white">
+                    <h3 class="text-2xl font-bold mb-2">Main Campus</h3>
+                    <p class="text-lg">Located in the heart of Hyderabad, our main campus offers state-of-the-art facilities and a vibrant learning environment.</p>
+                </div>
+            </div>
+
+            <!-- North Campus -->
+            <div class="relative h-96 rounded-lg overflow-hidden group">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" 
+                     style="background-image: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')">
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-50 group-hover:bg-opacity-40 transition-all duration-300"></div>
+                <div class="absolute inset-0 flex flex-col justify-end p-6 text-white">
+                    <h3 class="text-2xl font-bold mb-2">North Campus</h3>
+                    <p class="text-lg">Our modern north campus features specialized labs and sports facilities for comprehensive development.</p>
+                </div>
+            </div>
+
+            <!-- South Campus -->
+            <div class="relative h-96 rounded-lg overflow-hidden group md:col-span-2 lg:col-span-1 lg:col-start-2">
+                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" 
+                     style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80')">
+                </div>
+                <div class="absolute inset-0 bg-black bg-opacity-50 group-hover:bg-opacity-40 transition-all duration-300"></div>
+                <div class="absolute inset-0 flex flex-col justify-end p-6 text-white">
+                    <h3 class="text-2xl font-bold mb-2">South Campus</h3>
+                    <p class="text-lg">The south campus provides a serene learning environment with extensive green spaces and modern amenities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+  <!-- Contact -->
+  <section id="contact" class="py-12 bg-emerald-50">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl font-bold text-emerald-700 mb-8 text-center">Contact Us</h2>
+      <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+        <form class="space-y-6" action="{{ url_for('contact_us') }}" method="POST">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
+              <input type="text" id="name" name="name" placeholder="Enter your name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-300"/>
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Your Email</label>
+              <input type="email" id="email" name="email" placeholder="Enter your email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-300"/>
+            </div>
+          </div>
+          <div>
+            <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="Enter subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-300"/>
+          </div>
+          <div>
+            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Your Message</label>
+            <textarea id="message" name="message" rows="4" placeholder="Enter your message" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition duration-300"></textarea>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="px-8 py-3 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white font-medium rounded-lg hover:from-emerald-600 hover:to-emerald-800 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2">
+              Send Message
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white pt-12 pb-6">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <h3 class="text-xl font-bold mb-4">Greenwood High</h3>
+                <p class="text-gray-400 mb-4">Providing quality education since 1995. Our mission is to nurture young minds and prepare them for the future.</p>
+                <!-- <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                </div> -->
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-400 hover:text-white transition">Home</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition">Admissions</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition">Academics</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li class="flex items-start">
+                        <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                        <span>123 Education Ave, Greenwood, CA 90210</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-phone-alt mr-2"></i>
+                        <span>(555) 123-4567</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-envelope mr-2"></i>
+                        <span>info@greenwoodhigh.edu</span>
+                    </li>
+                </ul>
+            </div>
+            <div>
+              <h4 class="text-lg font-semibold mb-4">Follow us </h4>
+                <div class=" space-x-4">
+                  <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                  <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                  <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                  <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube"></i></a>
+              </div>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-center items-center">
+ 
+            <p>&copy; 2025 &nbsp;Greenwood High School. All rights reserved.</p>
+            <p>&nbsp; | &nbsp;</p>
+            <div class="flex space-x-4">
+                <a href="#" class="text-gray-400 hover:text-white text-sm">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white text-sm">Terms of Service</a>
+                <a href="#" class="text-gray-400 hover:text-white text-sm">Sitemap</a>
+            </div>
+        </div>
+    </div>
+</footer>
+<script src="../static/js/index.js"></script>
+</body>
+</html>
+

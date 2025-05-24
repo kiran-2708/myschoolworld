@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Timetables</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="min-h-screen flex flex-col bg-gray-50">
+    <header
+      class="sticky top-0 z-50 bg-gradient-to-r from-slate-800 to-slate-900 shadow-lg border-b border-gray-200"
+    >
+      <div class="container mx-auto px-2 md:px-4 py-2 md:py-3">
+        <div class="flex items-center justify-between px-2 md:px-2">
+          <!-- School Logo and Name -->
+          <div class="flex items-center space-x-2">
+            <svg
+              class="w-6 h-6 md:w-8 md:h-8 text-yellow-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div class="flex flex-col items-end">
+              <h1
+                class="text-base sm:text-lg md:text-2xl lg:text-3xl font-extrabold text-yellow-400"
+              >
+                Greenwood High School
+              </h1>
+              <p
+                class="text-[10px] sm:text-xs md:text-sm lg:text-base text-gray-100 text-right mt-1"
+              >
+                Excellence in Education
+              </p>
+            </div>
+          </div>
+          <!-- Desktop Buttons -->
+          <div class="hidden md:flex items-center space-x-2">
+            <form action="{{ url_for('admin_dashboard') }}">
+              <button
+                class="flex items-center space-x-1 sm:space-x-2 text-white px-3 py-1.5 rounded bg-gradient-to-r from-blue-500 to-blue-700 text-xs sm:text-sm font-semibold hover:from-blue-600 hover:to-blue-800 hover:scale-105 focus:outline-none transition duration-300 ease-in-out"
+              >
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+              </button>
+            </form>
+
+            <div class="relative">
+              <button
+                id="profileDropdown"
+                class="flex items-center space-x-1 sm:space-x-2 text-white px-3 py-1.5 rounded bg-gradient-to-r from-orange-400 to-amber-500 text-xs sm:text-sm font-semibold hover:from-orange-500 hover:to-amber-600 hover:scale-105 focus:outline-none transition duration-300 ease-in-out"
+              >
+                <i class="fas fa-user-shield"></i>
+                <span>Admin</span>
+                <svg
+                  class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              <div
+                id="dropdownMenu"
+                class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200"
+              >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                  >User</a
+                >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                  >Change Password</a
+                >
+                <a
+                  href="{{ url_for('logout') }}"
+                  class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Mobile Toggler Button -->
+          <button class="md:hidden relative" onclick="toggleMenu()">
+            <svg
+              class="w-6 h-6 text-yellow-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <div
+              id="mobileMenu"
+              class="hidden absolute right-0 mt-2 w-48 bg-slate-900 rounded-lg shadow-lg py-2 z-50"
+            >
+              <a
+                href="{{ url_for('admin_dashboard') }}"
+                class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300"
+                onclick="closeMenu()"
+              >
+                <i class="fas fa-home"></i> Home</a
+              >
+
+              <div class="border-t border-slate-700 my-2"></div>
+
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-rose-500 hover:bg-primary-50 hover:text-primary-200"
+                >User</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-rose-500 hover:bg-primary-50 hover:text-primary-200"
+                >Change Password</a
+              >
+              <a
+                href="{{ url_for('logout') }}"
+                class="block px-4 py-2 text-sm text-rose-500 hover:bg-primary-50 hover:text-primary-200"
+                >Logout</a
+              >
+            </div>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow w-full px-4 py-10 max-w-4xl mx-auto">
+      <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-4xl">
+        <form
+          action="{{ url_for('upload_students_timetable') }}"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <!-- Student Timetable Upload Card -->
+          <div class="bg-white shadow-xl rounded-xl p-8">
+            <h2 class="text-2xl font-bold text-vibrant-purple mb-6">
+              Upload Student Timetable
+            </h2>
+            <div class="space-y-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Standard</label
+                >
+                <div class="relative w-full" id="standard-dropdown">
+                  <button
+                    type="button"
+                    id="standardDropdownButton"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-primary-500 flex justify-between items-center"
+                  >
+                    <span id="standardSelectedOption">Select Standard</span>
+                    <svg
+                      class="w-4 h-4 ml-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+                  <ul
+                    id="standardDropdownMenu"
+                    class="hidden absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg"
+                  >
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      Nursery
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      LKG
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      UKG
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      1A
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      1B
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      2A
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      2B
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      3A
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      3B
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      4A
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      4B
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      5A
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      5B
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      6A
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      6B
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      7A
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      7B
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      8A
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      8B
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      9A
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      9B
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      10A
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      10B
+                    </li>
+                  </ul>
+                  <input
+                    type="hidden"
+                    name="standard"
+                    id="standardInput"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Select Time Table</label
+                >
+                <div class="relative w-full" id="timetable-dropdown">
+                  <button
+                    type="button"
+                    id="timetableDropdownButton"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-primary-500 flex justify-between items-center"
+                  >
+                    <span id="timetableSelectedOption">Select Type</span>
+                    <svg
+                      class="w-4 h-4 ml-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+                  <ul
+                    id="timetableDropdownMenu"
+                    class="hidden absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg"
+                  >
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      Class Time Table
+                    </li>
+                    <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                      Exam Time Table
+                    </li>
+                  </ul>
+                  <input
+                    type="hidden"
+                    name="timetable_type"
+                    id="timetableInput"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label class="block text-gray-700 text-sm font-semibold mb-2"
+                  >Upload Time Table</label
+                >
+                <input
+                  type="file"
+                  name="time_table"
+                  id="studentFile"
+                  class="w-full border-2 border-gray-200 rounded-lg p-3 focus:border-vibrant-purple focus:ring-2 focus:ring-vibrant-purple focus:ring-opacity-50 transition-colors duration-300"
+                />
+              </div>
+              <div class="flex justify-evenly mt-6">
+                <button
+                  type="submit"
+                  class="bg-gradient-to-r from-vibrant-blue to-vibrant-purple text-white py-3 px-8 rounded-lg font-semibold hover:from-vibrant-purple hover:to-vibrant-blue transform hover:scale-105 transition-all duration-300 shadow-lg"
+                >
+                  Upload
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <form
+          action="{{ url_for('upload_staff_timetable') }}"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <!-- Staff Timetable Upload Card -->
+          <div class="bg-white shadow-xl rounded-xl p-8">
+            <h2 class="text-2xl font-bold text-vibrant-green mb-6">
+              Upload Staff Timetable
+            </h2>
+            <div class="space-y-6">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >Staff ID</label
+                >
+                <div class="relative w-full" id="staff-dropdown">
+                  <button
+                    type="button"
+                    id="staffDropdownButton"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-primary-500 flex justify-between items-center"
+                  >
+                    <span id="staffSelectedOption">Select Staff ID</span>
+                    <svg
+                      class="w-4 h-4 ml-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+                  <ul
+                    id="staffDropdownMenu"
+                    class="hidden absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg"
+                  >
+                    {% if staff %} {% for staff_id in staff %}
+                    <li
+                      class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      data-value="{{ staff_id[0] }}"
+                    >
+                      {{ staff_id[0] }}
+                    </li>
+                    {% endfor %} {% else %}
+                    <p>No Staff</p>
+                    {% endif %}
+                  </ul>
+                  <input
+                    type="hidden"
+                    name="staff_ID"
+                    id="staffInput"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-gray-700 text-sm font-semibold mb-2"
+                  >Upload Time Table:</label
+                >
+                <input
+                  type="file"
+                  name="time_table"
+                  id="staffFile"
+                  class="w-full border-2 border-gray-200 rounded-lg p-3 focus:border-vibrant-green focus:ring-2 focus:ring-vibrant-green focus:ring-opacity-50 transition-colors duration-300"
+                />
+              </div>
+              <div class="flex justify-evenly mt-6">
+                <button
+                  type="submit"
+                  class="bg-gradient-to-r from-vibrant-green to-vibrant-blue text-white py-3 px-8 rounded-lg font-semibold hover:from-vibrant-blue hover:to-vibrant-green transform hover:scale-105 transition-all duration-300 shadow-lg"
+                >
+                  Upload
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- History Section -->
+    </main>
+
+    <div class="px-16 py-10">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Uploaded History</h2>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Student History Table -->
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden">
+          <div
+            class="bg-gradient-to-r from-vibrant-purple to-vibrant-blue px-6 py-4"
+          >
+            <h3 class="text-xl font-bold text-white">
+              Student Timetable History
+            </h3>
+          </div>
+          <div class="overflow-x-auto">
+            {% if students_timetables %}
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Standard
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Type
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    File Name
+                  </th>
+                  <th
+                    class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Delete
+                  </th>
+                </tr>
+              </thead>
+              {% for student_timetable in students_timetables %}
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {{ student_timetable[1] }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {{  student_timetable[2] }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <a href="{{  url_for('view_students_timetable', timetable_ID=student_timetable[0])  }}" class="hover:text-indigo-800 hover:underline">
+                      {{  student_timetable[3] }}
+                    </a>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-center">
+                    <form action="{{ url_for('delete_students_timetable', timetable_ID=student_timetable[0]) }}">
+                      <button
+                        class="text-red-500 hover:text-red-700 transition-colors duration-200"
+                      >
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+              {% endfor %}
+            </table>
+            {% else %}
+            <p>No Student Timetables Uploaded</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Staff History Table -->
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden">
+          <div
+            class="bg-gradient-to-r from-vibrant-green to-vibrant-blue px-6 py-4"
+          >
+            <h3 class="text-xl font-bold text-white">
+              Staff Timetable History
+            </h3>
+          </div>
+          <div class="overflow-x-auto">
+            {% if staff_timetables %}
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Staff ID
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    File Name
+                  </th>
+                  <th
+                    class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Delete
+                  </th>
+                </tr>
+              </thead>
+              {% for staff_timetable in staff_timetables %}
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="hover:bg-gray-50 transition-colors duration-200">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {{  staff_timetable[1] }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <a href="{{  url_for('view_staff_timetable', ID=staff_timetable[0])  }}" class="hover:text-indigo-800 hover:underline">
+                      {{  staff_timetable[2] }}
+                    </a>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-center">
+                    <form action="{{ url_for('delete_staff_timetable', ID=staff_timetable[0]) }}">
+                      <button 
+                        class="text-red-500 hover:text-red-700 transition-colors duration-200"
+                      >
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+              {% endfor %}
+            </table>
+            {% else %}
+            <p>No Staff Timetables Uploaded</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Confirmation Modal -->
+      <div
+        id="deleteModal"
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center"
+      >
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Confirm Delete</h3>
+          <p class="text-gray-600 mb-6">
+            Are you sure you want to delete this file? This action cannot be
+            undone.
+          </p>
+          <div class="flex justify-end space-x-4">
+            <button
+              onclick="closeDeleteModal()"
+              class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors duration-200"
+            >
+              Cancel
+            </button>
+            <button
+              onclick="confirmDelete()"
+              class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <!-- <img src="./assects/images/schoolname.avif" alt="School Logo" class="h-16 w-16 object-contain mb-4"> -->
+            <h3 class="text-xl font-bold mb-4">Greenwood High School</h3>
+            <p class="text-gray-400 mb-4">
+              Providing quality education since 1995. Our mission is to nurture
+              young minds and prepare them for the future.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Admissions</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Academics</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li class="flex items-start">
+                <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                <span>123 Education Ave, Greenwood, CA 90210</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-phone-alt mr-2"></i>
+                <span>(555) 123-4567</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-envelope mr-2"></i>
+                <span>info@greenwoodhigh.edu</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Follow us</h4>
+            <div class="space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-youtube"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-center items-center"
+        >
+          <p>&copy; 2025 &nbsp;Greenwood High School. All rights reserved.</p>
+          <p>&nbsp; | &nbsp;</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Privacy Policy</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Terms of Service</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Sitemap</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript for Dropdown -->
+    <script src="../static/js/upload_time_tables.js"></script>
+  </body>
+</html>

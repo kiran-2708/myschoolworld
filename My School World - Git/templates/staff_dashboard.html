@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../static/css/staff_dashboard.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="min-h-screen flex flex-col bg-gray-50">
+    <header
+      class="sticky top-0 z-50 bg-gradient-to-r from-slate-800 to-slate-900 shadow-lg border-b border-gray-200"
+    >
+      <div class="container mx-auto px-2 md:px-4 py-2 md:py-3">
+        <div class="flex items-center justify-between px-2 md:px-20">
+          <!-- School Logo and Name -->
+          <div class="flex items-center space-x-2">
+            <svg
+              class="w-6 h-6 md:w-8 md:h-8 text-yellow-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div class="flex flex-col items-end">
+              <h1 class="text-base sm:text-lg md:text-2xl lg:text-3xl font-extrabold text-yellow-400">Greenwood High School</h1>
+              <p class="text-[10px] sm:text-xs md:text-sm lg:text-base text-secondary-500 text-right mt-1">Excellence in Education</p>
+       
+            </div>
+          </div>
+          <!-- Profile Dropdown -->
+          <div class="relative">
+            <button
+              id="profileDropdown"
+              class="px-3 py-1 rounded bg-gradient-to-r from-orange-400 to-amber-500 text-white font-semibold flex items-center space-x-1"
+            >
+              <i class="fas fa-chalkboard-teacher"></i>
+              <span class="text-[10px] sm:text-xs md:text-sm font-medium"
+                >Staff</span
+              >
+              <svg
+                class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            <!-- Dropdown Menu -->
+            <div
+              id="dropdownMenu"
+              class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200"
+            >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                >User</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                >Change Password</a
+              >
+              <a
+                href="{{ url_for('logout') }}"
+                class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                >Logout</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex-grow container mx-auto px-12 py-8 ">
+      <div class="flex items-center space-x-4 mb-8 gap-6 ">
+        {% if staff %}
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800">
+              Welcome,
+              <span id="username" class="text-primary-600">{{ staff[3] }}</span>
+            </h2>
+          </div>
+        {% endif %}
+      </div>
+      {% if not functionalities %}
+      <div class="w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 rounded-xl shadow-xl mb-8 p-6">
+          <div class="flex items-center justify-between">
+            <div class="text-white">
+              <h2 class="text-2xl font-bold text-gray-100 flex items-center space-x-3">
+                <i class="fas fa-exclamation-triangle text-red-500 animate-pulse"></i>
+                <span>No Standard is Assigned for You</span>
+              </h2>  
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Cards Grid -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      >
+      {% if functionalities %}
+        <!-- Student Registration Card -->
+        <a href="{{ url_for('student_registration') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-user-plus text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                Student Registration
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              Register new students 
+            </p>
+          </div>
+        </a>
+
+        <!-- Student Details Card -->
+        <a href="{{ url_for('students_details_in_staff') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-users text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                Students Details
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              View and manage student records
+            </p>
+          </div>
+        </a>
+
+
+        <!-- Students Results Card -->
+        <a href="{{ url_for('students_results_in_staff') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-users text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                Students Results
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              View Test Results of Students
+            </p>
+          </div>
+        </a>
+
+
+
+        <!-- Promote Student Card -->
+        <a href="{{ url_for('promote_students') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-users text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                Promote Students
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              Promote Students to Next Standard
+            </p>
+          </div>
+        </a>
+
+
+
+        <!-- Upload Results Card -->
+        <a href="{{ url_for('upload_results') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-users text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                Upload Results
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              Upload Test or Exam Results
+            </p>
+          </div>
+        </a>
+
+        <!-- Staff Timetable -->
+        <a href="{{ url_for('staff_timetable') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-headset text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                My Time-Table
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              View and Download Time-Table
+            </p>
+          </div>
+        </a>
+
+        <!-- Request Leave Card -->
+        <a href="{{ url_for('request_leave') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-calendar-alt text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                Request Leave
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              Submit and track leave requests
+            </p>
+          </div>
+        </a>
+
+        <!-- Upload Question Papers Card -->
+        <a href="{{ url_for('upload_question_papers') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-file-upload text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                Upload Question Papers
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              Upload and Manage Papers
+            </p>
+          </div>
+        </a>
+
+        <!-- Materials Card -->
+        <a href="{{ url_for('upload_materials') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-book text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                Upload Materials
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              Access and Manage Materials
+            </p>
+          </div>
+        </a>
+
+        <!-- Parent Help Desk Card -->
+        <a href="{{ url_for('complaints') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-headset text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                Parent Help Desk
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              Support and assistance for parents
+            </p>
+          </div>
+        </a>
+        {% else %}
+        <!-- Staff Timetable -->
+        <a href="{{ url_for('staff_timetable') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-headset text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                My Time-Table
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              View and Download Time-Table
+            </p>
+          </div>
+        </a>
+
+        <!-- Request Leave Card -->
+        <a href="{{ url_for('request_leave') }}" class="block">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1 hover:bg-primary-50 group relative overflow-hidden border-l-4 border-primary-500 hover:border-primary-600"
+          >
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="flex items-center space-x-4 relative z-10">
+              <div
+                class="bg-primary-100 p-3 rounded-full group-hover:bg-primary-200 transition-colors duration-300"
+              >
+                <i
+                  class="fas fa-calendar-alt text-2xl text-primary-600 group-hover:text-primary-700"
+                ></i>
+              </div>
+              <h3
+                class="text-lg font-semibold text-gray-800 group-hover:text-primary-700"
+              >
+                Request Leave
+              </h3>
+            </div>
+            <p
+              class="mt-3 text-sm text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              Submit and track leave requests
+            </p>
+          </div>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+        
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <!-- <img src="./assects/images/schoolname.avif" alt="School Logo" class="h-16 w-16 object-contain mb-4"> -->
+            <h3 class="text-xl font-bold mb-4">Greenwood High School</h3>
+            <p class="text-gray-400 mb-4">
+              Providing quality education since 1995. Our mission is to nurture
+              young minds and prepare them for the future.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Admissions</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Academics</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li class="flex items-start">
+                <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                <span>123 Education Ave, Greenwood, CA 90210</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-phone-alt mr-2"></i>
+                <span>(555) 123-4567</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-envelope mr-2"></i>
+                <span>info@greenwoodhigh.edu</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Follow us</h4>
+            <div class="space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-youtube"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-center items-center"
+        >
+          <p>&copy; 2025 &nbsp;Greenwood High School. All rights reserved.</p>
+          <p>&nbsp; | &nbsp;</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Privacy Policy</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Terms of Service</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Sitemap</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript for Dropdown -->
+    <script src="../static/js/staff_dashboard.js"></script>
+  </body>
+</html>

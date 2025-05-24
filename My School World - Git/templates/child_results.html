@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Results</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="min-h-screen flex flex-col bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900"
+  >
+    <!-- <header
+      class="sticky top-0 z-50 bg-gradient-to-r from-slate-800 to-slate-900 shadow-lg border-b border-gray-200"
+    >
+      <div class="container mx-auto px-2 md:px-4 py-2 md:py-3">
+        <div class="flex items-center justify-between px-2 md:px-2">
+          
+          <div class="flex items-center space-x-2">
+            <svg
+              class="w-6 h-6 md:w-8 md:h-8 text-yellow-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div class="flex flex-col items-end">
+              <h1
+                class="text-base sm:text-lg md:text-2xl lg:text-3xl font-extrabold text-yellow-400"
+              >
+                Greenwood High School
+              </h1>
+              <p
+                class="text-[10px] sm:text-xs md:text-sm lg:text-base text-secondary-500 text-right mt-1"
+              >
+                Excellence in Education
+              </p>
+            </div>
+          </div>
+          
+          <div class="hidden md:flex items-center space-x-2">
+            <form action="{{ url_for('student_dashboard') }}">
+              <button
+                class="flex items-center space-x-1 sm:space-x-2 text-white px-3 py-1.5 rounded bg-gradient-to-r from-blue-500 to-blue-700 text-xs sm:text-sm font-semibold hover:from-blue-600 hover:to-blue-800 hover:scale-105 focus:outline-none transition duration-300 ease-in-out"
+              >
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+              </button>
+            </form>
+
+            <div class="relative">
+              <button
+                id="profileDropdown"
+                class="flex items-center space-x-1 sm:space-x-2 text-white px-3 py-1.5 rounded bg-gradient-to-r from-orange-400 to-amber-500 text-xs sm:text-sm font-semibold hover:from-orange-500 hover:to-amber-600 hover:scale-105 focus:outline-none transition duration-300 ease-in-out"
+              >
+                <i class="fas fa-user-graduate"></i>
+                <span>Student</span>
+                <svg
+                  class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              <div
+                id="dropdownMenu"
+                class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200"
+              >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                  >User</a
+                >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                  >Change Password</a
+                >
+                <a
+                  href="{{ url_for('logout') }}"
+                  class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+          
+          <button class="md:hidden relative" onclick="toggleMenu()">
+            <svg
+              class="w-6 h-6 text-yellow-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <div
+              id="mobileMenu"
+              class="hidden absolute right-0 mt-2 w-48 bg-slate-900 rounded-lg shadow-lg py-2 z-50"
+            >
+              <a
+                href="{{ url_for('student_dashboard') }}"
+                class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300 text-sm md:text-base"
+                onclick="closeMenu()"
+              >
+                <i class="fas fa-home"></i> Home</a
+              >
+
+              <div class="border-t border-slate-700 my-2"></div>
+
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm md:text-base text-rose-500 hover:bg-primary-50 hover:text-primary-200"
+                >User</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm md:text-base text-rose-500 hover:bg-primary-50 hover:text-primary-200"
+                >Change Password</a
+              >
+              <a
+                href="{{ url_for('logout') }}"
+                class="block px-4 py-2 text-sm md:text-base text-rose-500 hover:bg-primary-50 hover:text-primary-200"
+                >Logout</a
+              >
+            </div>
+          </button>
+        </div>
+      </div>
+    </header> -->
+
+    <div class="flex flex-col items-center justify-center my-4">
+      <h2 class="text-3xl font-bold text-white mb-8 text-center drop-shadow-lg">
+        Child Results
+      </h2>
+      <div
+        class="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"
+      >
+        <div class="text-center">
+          <div
+            id="datetime"
+            class="text-white text-lg md:text-xl font-bold"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="py-4 mx-auto rounded-lg bg-blue-200 shadow-lg inline-block">
+      <div class="flex justify-center items-center px-4">
+        <div class="w-full max-w-md">
+          <form
+            id="searchForm"
+            method="POST"
+            action="{{ url_for('child_results') }}"
+            class="w-full"
+          >
+            <div class="relative w-full" id="custom-academic-dropdown">
+              <button
+                type="button"
+                id="academicDropdownButton"
+                class="w-full px-3 py-2 border border-indigo-300 rounded-md bg-gradient-to-r from-indigo-50 to-blue-50 text-left focus:outline-none focus:ring-2 focus:ring-indigo-500 flex justify-between items-center hover:from-indigo-100 hover:to-blue-100 transition-colors duration-300"
+              >
+                <span
+                  id="selectedAcademicYear"
+                  class="text-gray-700 font-medium"
+                >
+                  {{ selected_year if selected_year else 'Select Academic Year'
+                  }}
+                </span>
+                <svg
+                  class="w-4 h-4 ml-2 text-indigo-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <ul
+                id="academicDropdownMenu"
+                class="hidden absolute z-10 w-full bg-gradient-to-b from-white to-indigo-50 border border-indigo-200 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg"
+              >
+                {% if academic_years %} {% for year in academic_years %}
+                <li
+                  class="px-4 py-2 hover:bg-gradient-to-r hover:from-indigo-100 hover:to-blue-100 cursor-pointer text-gray-700 transition-colors duration-200"
+                  data-value="{{ year }}"
+                >
+                  {{ year }}
+                </li>
+                {% endfor %} {% endif %}
+              </ul>
+
+              <input
+                type="hidden"
+                name="academic_year"
+                id="academicYearInput"
+                value="{{ selected_year }}"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <main class="flex-grow w-full px-4 py-6 md:py-10 max-w-4xl mx-auto">
+      <div
+        class="max-w-5xl mx-auto bg-gradient-to-br from-white via-blue-50 to-indigo-50 shadow-xl rounded-xl p-4 md:p-6 mb-8 border border-indigo-100"
+      >
+        {% if selected_year %}
+        <h2
+          class="text-2xl font-bold text-center bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-6"
+        >
+          Results for {{ selected_year }}
+        </h2>
+        {% endif %} {% if test_results or test_results_history %}
+        <div class="space-y-4">
+          {# --- Current Year Test Results --- #} {% if test_results %} {% for
+          test_result in test_results %} {% set test_id = test_result[0] %}
+          <details
+            class="border border-indigo-200 rounded-lg group hover:shadow-md transition-shadow duration-300"
+          >
+            <summary
+              class="flex justify-between items-center bg-gradient-to-r from-indigo-50 to-blue-50 p-3 md:p-4 cursor-pointer hover:from-indigo-100 hover:to-blue-100 transition-colors duration-300"
+            >
+              <div
+                class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 w-full"
+              >
+                <div class="text-sm md:text-base">
+                  <strong>{{ test_result[5] }}</strong>
+                </div>
+                <div class="text-sm md:text-base">{{ test_result[9] }}</div>
+                <div class="text-sm md:text-base">{{ test_result[10] }}</div>
+              </div>
+              <span
+                class="ml-2 md:ml-4 transition duration-200 w-4 h-4 md:w-5 md:h-5"
+              >
+                <img
+                  src="https://img.icons8.com/material-rounded/24/000000/chevron-down.png"
+                  alt="Expand"
+                  class="group-open:hidden"
+                />
+                <img
+                  src="https://img.icons8.com/material-rounded/24/000000/chevron-up.png"
+                  alt="Collapse"
+                  class="hidden group-open:inline"
+                />
+              </span>
+            </summary>
+
+            {% if subject_results[test_id] %}
+            <div class="px-2 md:px-4 pb-4 overflow-x-auto">
+              <table class="w-full mt-2 border-collapse">
+                <thead>
+                  <tr
+                    class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+                  >
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Exam Date
+                    </th>
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Subject
+                    </th>
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Marks Obtained
+                    </th>
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Total Marks
+                    </th>
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Grade
+                    </th>
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for subject_result in subject_results[test_id] %}
+                  <tr
+                    class="border-b hover:bg-indigo-50 transition-colors duration-200"
+                  >
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[2] }}
+                    </td>
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[3] }}
+                    </td>
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[4] }}
+                    </td>
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[5] }}
+                    </td>
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[6] }}
+                    </td>
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[7] }}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <p class="px-4 py-2 text-gray-600">
+              No results found for this test.
+            </p>
+            {% endif %}
+          </details>
+          {% endfor %} {% endif %} {# --- Historical Test Results --- #} {% if
+          test_results_history %} {% for test_result in test_results_history %}
+          {% set test_id = test_result[0] %}
+          <details
+            class="border border-indigo-200 rounded-lg group hover:shadow-md transition-shadow duration-300"
+          >
+            <summary
+              class="flex justify-between items-center bg-gradient-to-r from-indigo-50 to-blue-50 p-3 md:p-4 cursor-pointer hover:from-indigo-100 hover:to-blue-100 transition-colors duration-300"
+            >
+              <div
+                class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 w-full"
+              >
+                <div class="text-sm md:text-base">
+                  <strong>{{ test_result[5] }}</strong>
+                </div>
+                <div class="text-sm md:text-base">{{ test_result[9] }}</div>
+                <div class="text-sm md:text-base">{{ test_result[10] }}</div>
+              </div>
+              <span
+                class="ml-2 md:ml-4 transition duration-200 w-4 h-4 md:w-5 md:h-5"
+              >
+                <img
+                  src="https://img.icons8.com/material-rounded/24/000000/chevron-down.png"
+                  alt="Expand"
+                  class="group-open:hidden"
+                />
+                <img
+                  src="https://img.icons8.com/material-rounded/24/000000/chevron-up.png"
+                  alt="Collapse"
+                  class="hidden group-open:inline"
+                />
+              </span>
+            </summary>
+
+            {% if subject_results_history[test_id] %}
+            <div class="px-2 md:px-4 pb-4 overflow-x-auto">
+              <table class="w-full mt-2 border-collapse">
+                <thead>
+                  <tr
+                    class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+                  >
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Exam Date
+                    </th>
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Subject
+                    </th>
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Marks Obtained
+                    </th>
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Total Marks
+                    </th>
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Grade
+                    </th>
+                    <th
+                      class="text-left px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap"
+                    >
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for subject_result in subject_results_history[test_id] %}
+                  <tr
+                    class="border-b hover:bg-indigo-50 transition-colors duration-200"
+                  >
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[2] }}
+                    </td>
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[3] }}
+                    </td>
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[4] }}
+                    </td>
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[5] }}
+                    </td>
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[6] }}
+                    </td>
+                    <td
+                      class="px-2 md:px-4 py-2 text-sm md:text-base whitespace-nowrap text-gray-700"
+                    >
+                      {{ subject_result[7] }}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% else %}
+            <p class="px-4 py-2 text-gray-600">
+              No results found for this test.
+            </p>
+            {% endif %}
+          </details>
+          {% endfor %} {% endif %}
+        </div>
+        {% else %}
+        <div class="text-center py-8">
+          <p
+            class="text-lg text-gray-600 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-indigo-100 inline-block"
+          >
+            No results found for the selected academic year.
+          </p>
+        </div>
+        {% endif %}
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <!-- <footer class="bg-gray-800 text-white pt-12 pb-6">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <img src="./assects/images/schoolname.avif" alt="School Logo" class="h-16 w-16 object-contain mb-4">
+            <h3 class="text-xl font-bold mb-4">Greenwood High School</h3>
+            <p class="text-gray-400 mb-4">
+              Providing quality education since 1995. Our mission is to nurture
+              young minds and prepare them for the future.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Admissions</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Academics</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li class="flex items-start">
+                <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                <span>123 Education Ave, Greenwood, CA 90210</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-phone-alt mr-2"></i>
+                <span>(555) 123-4567</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-envelope mr-2"></i>
+                <span>info@greenwoodhigh.edu</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Follow us</h4>
+            <div class="space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-youtube"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-center items-center"
+        >
+          <p>&copy; 2025 &nbsp;Greenwood High School. All rights reserved.</p>
+          <p>&nbsp; | &nbsp;</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Privacy Policy</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Terms of Service</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Sitemap</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer> -->
+
+    <!-- JavaScript for Dropdown -->
+    <script src="../static/js/child_results.js"></script>
+  </body>
+</html>

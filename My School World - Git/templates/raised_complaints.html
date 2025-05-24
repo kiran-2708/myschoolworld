@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parent complaint status</title>
+    <!-- <link href="./dist/output.css" rel="stylesheet" /> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body
+    class="min-h-screen flex flex-col bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900 px-4 sm:px-6 md:px-8"
+  >
+    <!-- Header Section -->
+    <header class="py-6 text-center">
+      <h1 class="text-3xl font-bold text-white">Complaint Status</h1>
+      <p class="text-white mt-2">
+        Track the status of your submitted complaints
+      </p>
+    </header>
+    <div class="border"></div>
+    {% if complaints %}
+    <!-- Complaints Grid -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
+      {% for complaint in complaints %}
+      <!-- Sample Complaint Card -->
+      <div
+        class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+      >
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-4">
+            <div class="flex items-center text-gray-900">
+              <i class="fas fa-calendar-alt w-5"></i>
+              <span class="ml-2">Submitted On: {{ complaint[12] }} </span>
+            </div>
+            {% if complaint[13] == "Pending" %}
+            <span
+              class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800"
+            >
+              {{ complaint[13] }}
+            </span>
+            {% endif %} {% if complaint[13] == "Solved" %}
+            <span
+              class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800"
+            >
+              {{ complaint[13] }}
+            </span>
+            {% endif %}
+          </div>
+          <div class="space-y-3">
+            <div>
+              <h3 class="text-lg text-wrap font-semibold text-gray-800">
+                {{ complaint[4] }}
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <!-- No Complaints Found -->
+    <h1 class="text-center text-white">No Complaints Raised</h1>
+    {% endif %}
+  </body>
+</html>

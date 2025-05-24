@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Materials</title>
+    <!-- <link href="./dist/output.css" rel="stylesheet" /> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .gradient-border {
+        position: relative;
+        background: linear-gradient(white, white) padding-box,
+          linear-gradient(to right, #3b82f6, #10b981) border-box;
+        border: 2px solid transparent;
+        border-radius: 0.75rem;
+      }
+      .material-card {
+        border: 1px solid white;
+        box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.2),
+          0 4px 6px -2px rgba(255, 255, 255, 0.1),
+          0 0 0 1px rgba(255, 255, 255, 0.2);
+      }
+
+      .material-card:hover {
+        box-shadow: 0 20px 25px -5px rgba(255, 255, 255, 0.3),
+          0 10px 10px -5px rgba(255, 255, 255, 0.2),
+          0 0 0 1px rgba(255, 255, 255, 0.3);
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen flex flex-col bg-gradient-to-br from-slate-800 via-slate-700 to-slate-900"
+  >
+    <div class="container mx-auto px-4 py-8">
+      <h2 class="text-3xl font-bold text-white mb-8 text-center drop-shadow-lg">
+        {{ standard }} Study Materials
+      </h2>
+      <div class="border-b border-white/30 mb-2"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
+        <!-- Material Card 1 -->
+        {% if materials %} {% for material in materials %}
+        <div
+          class="gradient-border material-card bg-white rounded-xl overflow-hidden transform hover:scale-105 transition-all duration-300"
+        >
+          <div class="p-6">
+            <div class="flex items-center justify-evenly mb-4">
+              <h3 class="text-xl font-semibold text-slate-800">
+                {{ material[4] }}
+              </h3>
+            </div>
+            <p class="mb-4">
+              <i class="fas fa-book mr-2 text-blue-600"></i>
+              Topic: <span class="text-blue-500">{{ material[3] }}</span>
+            </p>
+            <form
+              action="{{ url_for('download_child_material', material_id = material[0]) }}"
+            >
+              <button
+                class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:from-blue-700 hover:to-green-700 transition-all duration-300 flex items-center justify-center font-medium shadow-lg hover:shadow-xl"
+              >
+                <i class="fas fa-download mr-2"></i>
+                Download Material
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <h2
+          class="text-3xl font-bold text-white mb-8 text-center drop-shadow-lg"
+        >
+          No Materials Found...
+        </h2>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>

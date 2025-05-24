@@ -1,0 +1,71 @@
+.gradient-bg {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      }
+      .hover-scale {
+        transition: transform 0.2s;
+      }
+      .hover-scale:hover {
+        transform: scale(1.02);
+      }
+      .delete-btn {
+        transition: all 0.3s;
+      }
+      .delete-btn:hover {
+        background-color: #ef4444;
+        color: red;
+      }
+      /* Alert Styles */
+      .alert {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transform: translateX(120%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
+      }
+      .alert.show {
+        transform: translateX(0);
+      }
+      .alert-success {
+        background-color: #ecfdf5;
+        border-left: 4px solid #10b981;
+      }
+      .alert-error {
+        background-color: #fef2f2;
+        border-left: 4px solid #ef4444;
+      }
+      .alert-icon {
+        font-size: 1.25rem;
+      }
+      .alert-success .alert-icon {
+        color: #10b981;
+      }
+      .alert-error .alert-icon {
+        color: #ef4444;
+      }
+      .alert-content {
+        flex: 1;
+      }
+      .alert-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+      .alert-message {
+        font-size: 0.875rem;
+        color: #4b5563;
+      }
+      .alert-close {
+        cursor: pointer;
+        padding: 0.25rem;
+        color: #6b7280;
+        transition: color 0.2s;
+      }
+      .alert-close:hover {
+        color: #374151;
+      }

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parent's Helpdesk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/wavesurfer.js@7"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body
+    class="min-h-screen py-6 sm:px-2 md:px-16 lg:px-36 flex items-center justify-center bg-gradient-to-br from-gray-800 via-gray-900 to-black text-white"
+  >
+    <div class="w-full max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-2xl">
+      <form
+        action="{{ url_for('parents_help_desk') }}"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <h2 class="text-3xl font-bold text-center text-indigo-500 mb-6">
+          Parent's Helpdesk
+        </h2>
+
+        <!-- Subject Input -->
+        <div class="mb-4">
+          <label
+            for="subject"
+            class="block text-sm font-semibold mb-2 text-gray-800"
+            >Subject</label
+          >
+          <input
+            id="subject"
+            name="subject"
+            type="text"
+            placeholder="Enter your subject"
+            class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:ring-2 focus:ring-indigo-500"
+            required
+          />
+        </div>
+
+        <p class="text-center text-sm text-red-400 pb-2 font-medium">
+          Choose any one option from below
+        </p>
+
+        <!-- Message Input -->
+        <div class="mb-4">
+          <label
+            for="message"
+            class="block text-sm font-semibold mb-2 text-gray-800"
+            >Message</label
+          >
+          <textarea
+            id="message"
+            name="message"
+            rows="4"
+            placeholder="Write your message here..."
+            class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:ring-2 focus:ring-indigo-500"
+          ></textarea>
+        </div>
+
+        <p class="text-center text-gray-600 py-2">OR</p>
+
+        <!-- Document Upload -->
+        <div class="mb-4">
+          <label
+            for="documents"
+            class="block text-sm font-semibold mb-2 text-gray-800"
+            >Upload Documents</label
+          >
+          <input
+            id="documents"
+            name="documents"
+            type="file"
+            class="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-600 text-gray-300"
+          />
+        </div>
+
+        <p class="text-center text-gray-600 py-2">OR</p>
+
+        <!-- Voice Recording Section -->
+        <div class="mb-4">
+          <label class="block text-sm font-semibold mb-2 text-gray-800"
+            >Voice Message</label
+          >
+          <div class="flex flex-col sm:flex-row items-center gap-4 mb-4">
+            <button
+              type="button"
+              id="startRecordingBtn"
+              onclick="startRecording()"
+              class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg transition text-white font-semibold"
+            >
+              🎤 Start
+            </button>
+            <button
+              type="button"
+              id="stopRecordingBtn"
+              onclick="stopRecording()"
+              disabled
+              class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg transition text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              ⏹ Stop
+            </button>
+          </div>
+
+          <div
+            id="audioRecordingStatus"
+            class="hidden mb-2 text-red-400 text-center"
+          >
+            ⏺ Recording... <span id="audioTimer" class="ml-1">00:00</span>
+          </div>
+
+          <div id="waveform" class="bg-gray-700 rounded-lg mb-4 h-24"></div>
+
+          <div id="audioControls" class="hidden space-y-2">
+            <audio id="audioPlayback" controls class="w-full"></audio>
+            <div class="flex gap-4 justify-center">
+              <button
+                onclick="deleteAudio()"
+                type="button"
+                class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white"
+              >
+                🗑 Delete
+              </button>
+            </div>
+          </div>
+
+          <!-- Hidden file input for audio submission -->
+          <input type="file" id="audio" name="audio" class="hidden" />
+        </div>
+
+        <!-- Submit -->
+        <div class="flex justify-center pt-4">
+          <button
+            type="submit"
+            class="bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-lg text-lg font-semibold text-white transition flex items-center gap-2"
+          >
+            📨 Submit Request
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      let mediaRecorder,
+        audioChunks = [],
+        audioTimerInterval,
+        audioStartTime,
+        wavesurfer,
+        audioStream;
+
+      function formatTime(ms) {
+        const seconds = Math.floor(ms / 1000);
+        const minutes = Math.floor(seconds / 60);
+        return `${String(minutes).padStart(2, "0")}:${String(
+          seconds % 60
+        ).padStart(2, "0")}`;
+      }
+
+      function updateAudioTimer() {
+        const elapsed = Date.now() - audioStartTime;
+        document.getElementById("audioTimer").textContent = formatTime(elapsed);
+      }
+
+      async function startRecording() {
+        try {
+          // Request microphone access
+          audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          
+          // Initialize MediaRecorder
+          mediaRecorder = new MediaRecorder(audioStream);
+          audioChunks = [];
+
+          // Set up event handlers
+          mediaRecorder.ondataavailable = (e) => {
+            audioChunks.push(e.data);
+          };
+
+          mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            
+            // Set up audio playback
+            const audioPlayback = document.getElementById("audioPlayback");
+            audioPlayback.src = audioUrl;
+            
+            // Initialize or reinitialize wavesurfer
+            if (wavesurfer) {
+              wavesurfer.destroy();
+            }
+            
+            wavesurfer = WaveSurfer.create({
+              container: "#waveform",
+              waveColor: "#6366f1",
+              progressColor: "#8b5cf6",
+              height: 80,
+              barWidth: 2,
+              cursorWidth: 1,
+              responsive: true
+            });
+            
+            wavesurfer.load(audioUrl);
+
+            // Update UI
+            clearInterval(audioTimerInterval);
+            document.getElementById("audioRecordingStatus").classList.add("hidden");
+            document.getElementById("audioControls").classList.remove("hidden");
+            document.getElementById("startRecordingBtn").disabled = false;
+            document.getElementById("stopRecordingBtn").disabled = true;
+
+            // Create file for form submission
+            const audioFile = new File([audioBlob], "voice_message.webm", {
+              type: "audio/webm",
+            });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(audioFile);
+            document.getElementById("audio").files = dataTransfer.files;
+          };
+
+          // Start recording
+          mediaRecorder.start(100); // Collect data every 100ms
+          audioStartTime = Date.now();
+          audioTimerInterval = setInterval(updateAudioTimer, 1000);
+          
+          // Update UI
+          document.getElementById("audioRecordingStatus").classList.remove("hidden");
+          document.getElementById("startRecordingBtn").disabled = true;
+          document.getElementById("stopRecordingBtn").disabled = false;
+          
+        } catch (error) {
+          console.error("Error accessing microphone:", error);
+          alert("Could not access microphone. Please ensure you've granted microphone permissions.");
+        }
+      }
+
+      function stopRecording() {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          mediaRecorder.stop();
+          
+          // Stop all tracks in the stream
+          if (audioStream) {
+            audioStream.getTracks().forEach(track => track.stop());
+          }
+        }
+      }
+
+      function deleteAudio() {
+        // Clear audio playback
+        document.getElementById("audioPlayback").src = "";
+        document.getElementById("audioControls").classList.add("hidden");
+        
+        // Clean up wavesurfer
+        if (wavesurfer) {
+          wavesurfer.destroy();
+          wavesurfer = null;
+        }
+        
+        // Clear audio file input
+        document.getElementById("audio").value = "";
+        audioChunks = [];
+      }
+    </script>
+  </body>
+</html>

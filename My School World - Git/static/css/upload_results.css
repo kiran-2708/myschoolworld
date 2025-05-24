@@ -1,0 +1,28 @@
+.delete-btn {
+      padding: 0.5rem;
+      color: #ef4444;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .delete-btn:hover {
+      color: #b91c1c;
+    }
+    input {
+      padding: 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+    }
+    input:focus {
+      border-color: #22c55e;
+      outline: none;
+    }
+    @media (max-width: 768px) {
+     
+      .delete-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }

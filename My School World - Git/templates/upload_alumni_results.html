@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Alumni Results</title>
+    <!-- <link href="./dist/output.css" rel="stylesheet"> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="min-h-screen flex flex-col bg-gray-50">
+    <header
+      class="sticky top-0 z-50 bg-gradient-to-r from-slate-800 to-slate-900 shadow-lg border-b border-gray-200"
+    >
+      <div class="container mx-auto px-2 md:px-4 py-2 md:py-3">
+        <div class="flex items-center justify-between px-2 md:px-2">
+          <!-- School Logo and Name -->
+          <div class="flex items-center space-x-2">
+            <svg
+              class="w-6 h-6 md:w-8 md:h-8 text-yellow-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div class="flex flex-col items-end">
+              <h1
+                class="text-base sm:text-lg md:text-2xl lg:text-3xl font-extrabold text-yellow-400"
+              >
+                Greenwood High School
+              </h1>
+              <p
+                class="text-[10px] sm:text-xs md:text-sm lg:text-base text-gray-100 text-right mt-1"
+              >
+                Excellence in Education
+              </p>
+            </div>
+          </div>
+          <!-- Desktop Buttons -->
+          <div class="hidden md:flex items-center space-x-2">
+            <form action="{{ url_for('admin_dashboard') }}">
+                <button
+                class="flex items-center space-x-1 sm:space-x-2 text-white px-3 py-1.5 rounded bg-gradient-to-r from-blue-500 to-blue-700 text-xs sm:text-sm font-semibold hover:from-blue-600 hover:to-blue-800 hover:scale-105 focus:outline-none transition duration-300 ease-in-out"
+                >
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+                </button>
+            </form>
+
+            <div class="relative">
+                <button id="profileDropdown" class="flex items-center space-x-1 sm:space-x-2 text-white px-3 py-1.5 rounded bg-gradient-to-r from-orange-400 to-amber-500 text-xs sm:text-sm font-semibold 
+                hover:from-orange-500 hover:to-amber-600 hover:scale-105 focus:outline-none transition duration-300 ease-in-out">
+                <i class="fas fa-user-shield"></i>
+                <span>Admin</span>
+                <svg class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div
+                id="dropdownMenu"
+                class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200"
+              >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                  >User</a
+                >
+                <a
+                  href="{{ url_for('logout') }}"
+                  class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Mobile Toggler Button -->
+          <button class="md:hidden relative" onclick="toggleMenu()">
+            <svg
+              class="w-6 h-6 text-yellow-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <div
+              id="mobileMenu"
+              class="hidden absolute right-0 mt-2 w-48 bg-slate-900 rounded-lg shadow-lg py-2 z-50"
+            >
+              <a
+                href="{{ url_for('admin_dashboard') }}"
+                class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300"
+                onclick="closeMenu()"
+              >
+                <i class="fas fa-home"></i>Home</a
+              >
+
+              <div class="border-t border-slate-700 my-2"></div>
+
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-rose-500 hover:bg-primary-50 hover:text-primary-200"
+                >User</a
+              >
+              <a
+                href="{{ url_for('logout') }}"
+                class="block px-4 py-2 text-sm text-rose-500 hover:bg-primary-50 hover:text-primary-200"
+                >Logout</a
+              >
+            </div>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-xl p-6 md:p-8">
+          <h2
+            class="text-2xl md:text-3xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+          >
+            Upload Alumni Results
+          </h2>
+          {% if student %}
+          <form class="space-y-6" action="{{ url_for('upload_alumni_results', student_ID = student[0]) }}" method="POST">
+            <!-- Student Name -->
+            <div class="space-y-2">
+              <label
+                for="studentName"
+                class="block text-sm font-medium text-gray-700"
+                >Student Name</label
+              >
+              <input
+                type="text"
+                id="studentName"
+                name="studentName"
+                value="{{ student[1] }}"
+                disabled
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg bg-gray-100 text-gray-500 
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                transition duration-300 ease-in-out"
+              />
+            </div>
+  
+            <!-- SSC Hall Ticket -->
+            <div class="space-y-2">
+              <label
+                for="sscHallTicket"
+                class="block text-sm font-medium text-gray-700"
+                >SSC Hall Ticket Number</label
+              >
+              <input
+                type="text"
+                id="sscHallTicket"
+                name="ssc_hall_ticket"
+                class="w-full px-4 py-3 border-2 border-purple-300 rounded-lg 
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
+                hover:border-purple-400 transition duration-300 ease-in-out
+                placeholder-purple-200" 
+                placeholder="Enter hall ticket number"
+              />
+            </div>
+  
+            <!-- Passed Out Year -->
+            <div class="space-y-2">
+              <label
+                for="passedOutYear"
+                class="block text-sm font-medium text-gray-700"
+                >Passed Out Year</label
+              >
+              <input
+                type="number"
+                id="passedOutYear"
+                name="passed_out_year"
+                value="{{ student[2] }}"
+                disabled
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg bg-gray-100 text-gray-500 
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                transition duration-300 ease-in-out"
+              />
+            </div>
+  
+            <!-- Percentage -->
+            <div class="space-y-2">
+              <label
+                for="percentage"
+                class="block text-sm font-medium text-gray-700"
+                >Percentage</label
+              >
+              <input
+                type="number"
+                id="percentage"
+                name="percentage"
+                step="0.01"
+                min="0"
+                max="100"
+                class="w-full px-4 py-3 border-2 border-blue-300 rounded-lg 
+                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                hover:border-blue-400 transition duration-300 ease-in-out
+                placeholder-blue-200" 
+                placeholder="Enter percentage"
+                oninput="calculateFromPercentage()"
+              />
+            </div>
+  
+            <!-- CGPA -->
+            <div class="space-y-2">
+              <label
+                for="cgpa"
+                class="block text-sm font-medium text-gray-700"
+                >CGPA</label
+              >
+              <input
+                type="number"
+                id="cgpa"
+                name="cgpa"
+                step="0.01"
+                min="0"
+                max="10"
+                class="w-full px-4 py-3 border-2 border-green-300 rounded-lg 
+                focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent
+                hover:border-green-400 transition duration-300 ease-in-out
+                placeholder-green-200" 
+                placeholder="Enter CGPA"
+                oninput="calculateFromCGPA()"
+              />
+            </div>
+  
+            <!-- Submit Button -->
+            <div class="pt-6 text-center">
+              <button
+                type="submit"
+                class="w-full md:w-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold 
+                py-3 px-8 rounded-lg hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 
+                transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 
+                focus:ring-offset-2 shadow-lg hover:shadow-xl">
+                Submit
+              </button>
+            </div>
+          </form>
+          {% endif %}
+        </div>
+      </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <!-- <img src="./assects/images/schoolname.avif" alt="School Logo" class="h-16 w-16 object-contain mb-4"> -->
+            <h3 class="text-xl font-bold mb-4">Greenwood High School</h3>
+            <p class="text-gray-400 mb-4">
+              Providing quality education since 1995. Our mission is to nurture
+              young minds and prepare them for the future.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Admissions</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Academics</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li class="flex items-start">
+                <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                <span>123 Education Ave, Greenwood, CA 90210</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-phone-alt mr-2"></i>
+                <span>(555) 123-4567</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-envelope mr-2"></i>
+                <span>info@greenwoodhigh.edu</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Follow us</h4>
+            <div class="space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-youtube"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-center items-center"
+        >
+          <p>&copy; 2025 &nbsp;Greenwood High School. All rights reserved.</p>
+          <p>&nbsp; | &nbsp;</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Privacy Policy</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Terms of Service</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Sitemap</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript for Dropdown -->
+    <script>
+      function toggleMenu(event) {
+        if (event) {
+          event.stopPropagation();
+        }
+        document.getElementById("mobileMenu").classList.toggle("hidden");
+      }
+
+      // Close menu script
+      function closeMenu(event) {
+        if (event) {
+          event.stopPropagation();
+        }
+        document.getElementById("mobileMenu").classList.add("hidden");
+      }
+
+      // Close menu when clicking outside
+      document.addEventListener("click", function (event) {
+        const mobileMenu = document.getElementById("mobileMenu");
+        const menuButton = document.querySelector(
+          'button[onclick="toggleMenu()"]'
+        );
+
+        if (
+          !menuButton.contains(event.target) &&
+          !mobileMenu.contains(event.target)
+        ) {
+          mobileMenu.classList.add("hidden");
+        }
+      });
+
+      const profileDropdown = document.getElementById("profileDropdown");
+      const dropdownMenu = document.getElementById("dropdownMenu");
+
+      profileDropdown.addEventListener("click", () => {
+        dropdownMenu.classList.toggle("hidden");
+      });
+
+      // Close dropdown when clicking outside
+      window.addEventListener("click", (e) => {
+        if (!profileDropdown.contains(e.target)) {
+          dropdownMenu.classList.add("hidden");
+        }
+      });
+
+      // Function to calculate CGPA from percentage
+      function calculateFromPercentage() {
+        const percentageInput = document.getElementById("percentage");
+        const cgpaInput = document.getElementById("cgpa");
+      
+        const percentage = parseFloat(percentageInput.value);
+        if (!isNaN(percentage)) {
+          let cgpa = percentage / 9.5;
+          if (cgpa > 10) {
+            cgpa = 10;
+          }
+          cgpaInput.value = cgpa.toFixed(2);
+        } else {
+          cgpaInput.value = "";
+        }
+      }
+      
+      function calculateFromCGPA() {
+        const cgpaInput = document.getElementById("cgpa");
+        const percentageInput = document.getElementById("percentage");
+      
+        const cgpa = parseFloat(cgpaInput.value);
+        if (!isNaN(cgpa)) {
+          const percentage = cgpa * 9.5;
+          percentageInput.value = percentage.toFixed(2);
+        } else {
+          percentageInput.value = "";
+        }
+      }
+      
+      document.addEventListener("DOMContentLoaded", function () {
+        const percentageInput = document.getElementById("percentage");
+        const cgpaInput = document.getElementById("cgpa");
+
+        percentageInput.addEventListener("input", function () {
+          if (this.value === "") {
+            cgpaInput.value = "";
+          }
+        });
+
+        cgpaInput.addEventListener("input", function () {
+          if (this.value === "") {
+            percentageInput.value = "";
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

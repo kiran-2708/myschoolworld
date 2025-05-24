@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Result Form</title>
+    <!-- <link href="./dist/output.css" rel="stylesheet"> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../static/css/upload_results.css" />
+  </head>
+  <body class="min-h-screen flex flex-col bg-gray-50">
+    <header
+      class="sticky top-0 z-50 bg-gradient-to-r from-slate-800 to-slate-900 shadow-lg border-b border-gray-200"
+    >
+      <div class="container mx-auto px-2 md:px-4 py-2 md:py-3">
+        <div class="flex items-center justify-between px-2 md:px-2">
+          <!-- School Logo and Name -->
+          <div class="flex items-center space-x-2">
+            <svg
+              class="w-6 h-6 md:w-8 md:h-8 text-yellow-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div class="flex flex-col items-end">
+              <h1
+                class="text-base sm:text-lg md:text-2xl lg:text-3xl font-extrabold text-yellow-400"
+              >
+                Greenwood High School
+              </h1>
+              <p
+                class="text-[10px] sm:text-xs md:text-sm lg:text-base text-secondary-500 text-right mt-1"
+              >
+                Excellence in Education
+              </p>
+            </div>
+          </div>
+          <!-- Desktop Buttons -->
+          <div class="hidden md:flex items-center space-x-2">
+            <form action="{{ url_for('staff_dashboard') }}">
+              <button
+                class="flex items-center space-x-1 sm:space-x-2 text-white px-3 py-1.5 rounded bg-gradient-to-r from-blue-500 to-blue-700 text-xs sm:text-sm font-semibold hover:from-blue-600 hover:to-blue-800 hover:scale-105 focus:outline-none transition duration-300 ease-in-out"
+              >
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+              </button>
+            </form>
+
+            <div class="relative">
+              <button
+                id="profileDropdown"
+                class="flex items-center space-x-1 sm:space-x-2 text-white px-3 py-1.5 rounded bg-gradient-to-r from-orange-400 to-amber-500 text-xs sm:text-sm font-semibold hover:from-orange-500 hover:to-amber-600 hover:scale-105 focus:outline-none transition duration-300 ease-in-out"
+              >
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>Staff</span>
+                <svg
+                  class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+              <div
+                id="dropdownMenu"
+                class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200"
+              >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                  >User</a
+                >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                  >Change Password</a
+                >
+                <a
+                  href="{{ url_for('logout') }}"
+                  class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
+          <!-- Mobile Toggler Button -->
+          <button class="md:hidden relative" onclick="toggleMenu()">
+            <svg
+              class="w-6 h-6 text-yellow-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <div
+              id="mobileMenu"
+              class="hidden absolute right-0 mt-2 w-48 bg-slate-900 rounded-lg shadow-lg py-2 z-50"
+            >
+              <a
+                href="{{ url_for('staff_dashboard') }}"
+                class="block px-4 py-2 text-white hover:text-yellow-300 hover:bg-slate-800 transition-colors duration-300"
+                onclick="closeMenu()"
+              >
+                <i class="fas fa-home"></i> Home</a
+              >
+
+              <div class="border-t border-slate-700 my-2"></div>
+
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-rose-500 hover:bg-primary-50 hover:text-primary-200"
+                >User</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-rose-500 hover:bg-primary-50 hover:text-primary-200"
+                >Change Password</a
+              >
+              <a
+                href="{{  url_for('logout') }}"
+                class="block px-4 py-2 text-sm text-rose-500 hover:bg-primary-50 hover:text-primary-200"
+                >Logout</a
+              >
+            </div>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="pt-16">
+      <div class="content-wrapper pb-10">
+        <form
+          action="{{ url_for('upload_results') }}"
+          method="POST"
+          id="resultForm"
+        >
+          <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded shadow">
+            <h1 class="text-3xl font-bold text-center text-indigo-700 mb-4">
+              Academic Year: <span id="academicYear"></span>
+            </h1>
+            {% if roll_numbers %}
+            <div class="flex justify-end mb-4">
+              <div class="w-full md:w-1/2 relative" id="roll-number-dropdown">
+                <!-- <select id="studentId" name="roll_number" required class="mt-1 block w-full border border-gray-300 rounded px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 mx-auto">
+              <option value="" selected>Select Student</option>
+              {% for roll_number in roll_numbers %}
+                <option value="{{ roll_number[0] }}">{{ roll_number[0] }}</option>
+              {% endfor %}
+            </select> -->
+                <button
+                  type="button"
+                  id="rollNumberButton"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-indigo-500 flex justify-between items-center"
+                >
+                  <span id="rollNumberSelected">Select Student</span>
+                  <svg
+                    class="w-4 h-4 ml-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                <ul
+                  id="rollNumberMenu"
+                  class="hidden absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg"
+                >
+                  {% for roll_number in roll_numbers %}
+                  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    {{ roll_number[0] }}
+                  </li>
+                  {% endfor %}
+                </ul>
+
+                <input
+                  type="hidden"
+                  name="roll_number"
+                  id="rollNumberInput"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700"
+                >Test Name:</label
+              >
+              <input
+                type="text"
+                name="testName"
+                class="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
+                required
+              />
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700"
+                >Subjects:</label
+              >
+              <div class="overflow-x-auto">
+                <table
+                  class="min-w-full bg-white border border-gray-200 rounded-lg"
+                >
+                  <thead class="bg-gray-50">
+                    <tr class="text-left">
+                      <th class="px-4 py-2">Conducted Date</th>
+                      <th class="px-4 py-2">Subject Name</th>
+                      <th class="px-4 py-2">Obtained Marks</th>
+                      <th class="px-4 py-2">Total Marks</th>
+                      <th class="px-4 py-2">Grade</th>
+                      <th class="px-4 py-2">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="subjectsContainer"></tbody>
+                </table>
+              </div>
+              <button
+                type="button"
+                id="addSubject"
+                class="mt-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+              >
+                Add Subject
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700"
+                  >Exam Start Date:</label
+                >
+                <input
+                  type="date"
+                  name="examStartDate"
+                  class="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700"
+                  >Exam End Date:</label
+                >
+                <input
+                  type="date"
+                  name="examEndDate"
+                  class="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700"
+                >Total Marks:</label
+              >
+              <input
+                type="text"
+                name="total_marks"
+                id="totalMarksDisplay"
+                readonly
+                class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700"
+                >Percentage / CGPA:</label
+              >
+              <input
+                type="text"
+                name="percentage_cgpa"
+                id="percentage"
+                readonly
+                class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-100"
+              />
+            </div>
+
+            <div class="flex justify-center">
+              <button
+                type="submit"
+                class="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+          {% else %}
+          <p class="text-center text-red-500 text-2xl font-extrabold">No Students Found.</p>
+          {% endif %}
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div>
+            <!-- <img src="./assects/images/schoolname.avif" alt="School Logo" class="h-16 w-16 object-contain mb-4"> -->
+            <h3 class="text-xl font-bold mb-4">Greenwood High School</h3>
+            <p class="text-gray-400 mb-4">
+              Providing quality education since 1995. Our mission is to nurture
+              young minds and prepare them for the future.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Admissions</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Academics</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li class="flex items-start">
+                <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                <span>123 Education Ave, Greenwood, CA 90210</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-phone-alt mr-2"></i>
+                <span>(555) 123-4567</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-envelope mr-2"></i>
+                <span>info@greenwoodhigh.edu</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Follow us</h4>
+            <div class="space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-youtube"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-center items-center"
+        >
+          <p>&copy; 2025 &nbsp;Greenwood High School. All rights reserved.</p>
+          <p>&nbsp; | &nbsp;</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Privacy Policy</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Terms of Service</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Sitemap</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="../static/js/upload_results.js"></script>
+  </body>
+</html>

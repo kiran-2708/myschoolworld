@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Add SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body class="min-h-screen flex flex-col bg-gray-50">
+    <div class="min-h-screen flex flex-col bg-black">
+      <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+          <!-- Student Basic Information -->
+          <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">
+              Student Details
+            </h2>
+            {% if student %}
+            <!-- School and Staff Information -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+              <h2 class="text-xl font-bold text-gray-800 mb-4">
+                School and Staff Information
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">School ID :</p>
+                  <p class="font-semibold text-gray-800">{{ student[1] }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">Staff ID :</p>
+                  <p class="font-semibold text-gray-800">{{ student[2] }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Student Basic Information -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+              <h2 class="text-xl font-bold text-gray-800 mb-4">
+                Student Basic Information
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">
+                    Student Roll No :
+                  </p>
+                  <p class="font-semibold text-gray-800">{{ student[4] }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">
+                    Student Name :
+                  </p>
+                  <p class="font-semibold text-gray-800">{{ student[5] }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">
+                    Date of Birth :
+                  </p>
+                  <p class="font-semibold text-gray-800">{{ student[7] }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">Blood Group :</p>
+                  <p class="font-semibold text-gray-800">{{ student[25] }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">Gender :</p>
+                  <p class="font-semibold text-gray-800">{{ student[8] }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">Standard :</p>
+                  <p class="font-semibold text-gray-800">{{ student[6] }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Student Contact Information -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+              <h2 class="text-xl font-bold text-gray-800 mb-4">
+                Student Contact Information
+              </h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">
+                    Student Aadhar Number :
+                  </p>
+                  <p class="font-semibold text-gray-800">{{ student[9] }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">
+                    Student Email :
+                  </p>
+                  <p class="font-semibold text-gray-800">{{ student[10] }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">
+                    Student Mobile Number :
+                  </p>
+                  <p class="font-semibold text-gray-800">{{ student[11] }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">
+                    Resident Type :
+                  </p>
+                  <p class="font-semibold text-gray-800">{{ student[12] }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <p class="text-sm text-blue-600 font-medium">
+                    Contact Email :
+                  </p>
+                  <p class="font-semibold text-gray-800">{{ student[23] }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Parent Information -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+              <h2 class="text-xl font-bold text-gray-800 mb-4">
+                Parent Information
+              </h2>
+
+              <!-- Father's Information -->
+              <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">
+                  Father's Information
+                </h3>
+                <div
+                  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                >
+                  <div class="flex items-center space-x-2">
+                    <p class="text-sm text-blue-600 font-medium">
+                      Father's Name :
+                    </p>
+                    <p class="font-semibold text-gray-800">{{ student[13] }}</p>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <p class="text-sm text-blue-600 font-medium">
+                      Father's Aadhar Number :
+                    </p>
+                    <p class="font-semibold text-gray-800">{{ student[14] }}</p>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <p class="text-sm text-blue-600 font-medium">
+                      Father's Mobile Number :
+                    </p>
+                    <p class="font-semibold text-gray-800">{{ student[15] }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mother's Information -->
+              <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">
+                  Mother's Information
+                </h3>
+                <div
+                  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                >
+                  <div class="flex items-center space-x-2">
+                    <p class="text-sm text-blue-600 font-medium">
+                      Mother's Name :
+                    </p>
+                    <p class="font-semibold text-gray-800">{{ student[16] }}</p>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <p class="text-sm text-blue-600 font-medium">
+                      Mother's Aadhar Number :
+                    </p>
+                    <p class="font-semibold text-gray-800">{{ student[17] }}</p>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <p class="text-sm text-blue-600 font-medium">
+                      Mother's Mobile Number :
+                    </p>
+                    <p class="font-semibold text-gray-800">{{ student[18] }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Guardian Information -->
+              <div>
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">
+                  Guardian Information
+                </h3>
+                <div
+                  class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                >
+                  <div class="flex items-center space-x-2">
+                    <p class="text-sm text-blue-600 font-medium">
+                      Guardian's Name :
+                    </p>
+                    <p class="font-semibold text-gray-800">{{ student[19] }}</p>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <p class="text-sm text-blue-600 font-medium">
+                      Guardian's Aadhar Number :
+                    </p>
+                    <p class="font-semibold text-gray-800">{{ student[20] }}</p>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <p class="text-sm text-blue-600 font-medium">
+                      Guardian's Mobile Number :
+                    </p>
+                    <p class="font-semibold text-gray-800">{{ student[21] }}</p>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <p class="text-sm text-blue-600 font-medium">
+                      Relationship with Student :
+                    </p>
+                    <p class="font-semibold text-gray-800">{{ student[22] }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Address Information -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+              <h2 class="text-xl font-bold text-gray-800 mb-4">
+                Address Information
+              </h2>
+              <div class="flex items-center space-x-2">
+                <p class="text-sm text-blue-600 font-medium">Address :</p>
+                <p class="font-semibold text-gray-800">{{ student[24] }}</p>
+              </div>
+            </div>
+            {% else %}
+            <div class="bg-white rounded-lg shadow-md p-6">
+              <p class="font-semibold text-gray-800">
+                No Data Found for {{ student_ID }}
+              </p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <!-- <footer class="bg-gray-800 text-white pt-12 pb-6">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <div> -->
+    <!-- <img src="./assects/images/schoolname.avif" alt="School Logo" class="h-16 w-16 object-contain mb-4"> -->
+    <!-- <h3 class="text-xl font-bold mb-4">Greenwood High School</h3>
+            <p class="text-gray-400 mb-4">
+              Providing quality education since 1995. Our mission is to nurture
+              young minds and prepare them for the future.
+            </p>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >About Us</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Admissions</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Academics</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white transition"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+            <ul class="space-y-2 text-gray-400">
+              <li class="flex items-start">
+                <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                <span>123 Education Ave, Greenwood, CA 90210</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-phone-alt mr-2"></i>
+                <span>(555) 123-4567</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-envelope mr-2"></i>
+                <span>info@greenwoodhigh.edu</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-lg font-semibold mb-4">Follow us</h4>
+            <div class="space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="#" class="text-gray-400 hover:text-white transition"
+                ><i class="fab fa-youtube"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-center items-center"
+        >
+          <p>&copy; 2025 &nbsp;Greenwood High School. All rights reserved.</p>
+          <p>&nbsp; | &nbsp;</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Privacy Policy</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Terms of Service</a
+            >
+            <a href="#" class="text-gray-400 hover:text-white text-sm"
+              >Sitemap</a
+            >
+          </div>
+        </div>
+      </div>
+    </footer> -->
+
+    <!-- JavaScript for Dropdown -->
+    <!-- <script src="../static/js/student_details_in_admin.js"></script> -->
+  </body>
+</html>

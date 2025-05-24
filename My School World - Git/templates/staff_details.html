@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50">
+    <header class="sticky top-0 z-50 bg-gradient-to-r from-slate-800 to-slate-900 shadow-lg border-b border-gray-200">
+        <div class="container mx-auto px-2 md:px-4 py-2 md:py-3">
+            <div class="flex items-center justify-between px-2 md:px-20">
+                <!-- School Logo and Name -->
+                <div class="flex items-center space-x-2">
+                    <svg class="w-6 h-6 md:w-8 md:h-8 text-yellow-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" fill="currentColor"/>
+                    </svg>
+                    <div class="flex flex-col items-end">
+                        <h1 class="text-base sm:text-lg md:text-3xl font-extrabold text-yellow-400">Greenwood High School</h1>
+                        <p class="text-[10px] sm:text-xs md:text-sm text-gray-100 text-right mt-1">Excellence in Education</p>
+                    </div>
+                </div>
+    
+                <!-- Buttons Section -->
+                <div class="flex items-center space-x-2">
+                    <!-- Home Button -->
+                    <form action="{{ url_for('admin_dashboard') }}">
+                        <button class="flex items-center space-x-1 sm:space-x-2 text-white hover:text-slate-600 focus:outline-none transition duration-150 px-2 sm:px-3 md:px-4 py-1 rounded bg-gradient-to-r from-blue-500 to-blue-700 text-[10px] sm:text-xs md:text-sm font-semibold">
+                            <span>Home</span>
+                        </button>
+                    </form>
+                    
+                    <form action="{{ url_for('staff_registration') }}">
+                        <!-- Staff Registration Button -->
+                        <button class="flex items-center space-x-1 sm:space-x-2 text-white hover:text-slate-600 focus:outline-none transition duration-150 px-2 sm:px-3 md:px-4 py-1 rounded bg-gradient-to-r from-green-500 to-emerald-600 text-[10px] sm:text-xs md:text-sm font-semibold">
+                            <span>Staff Registration</span>
+                        </button>
+                    </form>
+                    <!-- Profile Dropdown (Admin Button) -->
+                    <div class="relative">
+                        <button id="profileDropdown" class="flex items-center space-x-1 sm:space-x-2 text-white hover:text-slate-600 focus:outline-none transition duration-150 px-1 sm:px-2 md:px-3 py-1 rounded bg-gradient-to-r from-fuchsia-500 to-pink-600 text-[10px] sm:text-xs md:text-sm font-semibold">
+                            <span>Admin</span>
+                            <svg class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200">
+                            <a href="#" class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700">User</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700">Change Password</a>
+                            <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-sm text-secondary-600 hover:bg-primary-50 hover:text-primary-700">Logout</a>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </header>
+    
+    
+
+    <div>
+        <div class="container mx-auto px-4 py-8">
+            <div class="bg-white rounded-lg shadow-md p-6 mx-10">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Staff Details</h2>
+                    <button onclick="downloadPDF()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-200 flex items-center space-x-2">
+                        <i class="fas fa-download"></i>
+                        <span>Download PDF</span>
+                    </button>
+                </div>
+                <div class="overflow-x-auto mt-6">
+                    {% if staff %}
+                        <table class="min-w-full table-auto border border-gray-300" id="staffTable">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-4 py-2 text-sm font-medium text-center text-gray-700 w-1/3">STAFF ID</th>
+                                    <th class="px-4 py-2 text-sm font-medium text-center text-gray-700 w-1/3">STAFF NAME</th>
+                                    <th class="px-4 py-2 text-sm font-medium text-center text-gray-700 w-1/3">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                {% for individual in staff %}
+                                    <tr class="border-t">
+                                        <!-- Dynamic Staff ID -->
+                                        <td class="px-4 py-3 text-sm text-center text-gray-700">{{ individual[2] }}</td>
+                                        
+                                        <!-- Dynamic Staff Name -->
+                                        <td class="px-4 py-3 text-sm text-center text-gray-700">
+                                            <button 
+                                                onclick="showStaffDetails(this)" 
+                                                class="text-blue-600 hover:text-blue-800 hover:underline"
+                                                data-school-id="{{ individual[1] }}"
+                                                data-staff-id="{{ individual[2] }}"
+                                                data-name="{{ individual[3] }}"
+                                                data-standard="{{ individual[4] }}"
+                                                data-aadhar="{{ individual[11] }}"
+                                                data-qualification="{{ individual[9] }}"
+                                                data-doj="{{ individual[10] }}"
+                                                data-email="{{ individual[5] }}"
+                                                data-mobile="{{ individual[6] }}"
+                                                data-gender="{{ individual[12] }}"
+                                            >
+                                                {{ individual[3] }}
+                                            </button>
+                                        </td>
+                                        
+                                        <!-- Delete Button -->
+                                        <td class="px-4 py-3 text-sm text-center text-gray-700">
+                                            <form action="{{ url_for('delete_staff', staff_ID = individual[2]) }}" method="POST" onsubmit="return false;">
+                                                <button 
+                                                    type="button"
+                                                    class="inline-flex items-center px-3 py-1 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 transition-colors duration-200"
+                                                    onclick="deleteStaff(this, '{{ individual[2] }}', this.closest('form'))">
+                                                    <i class="fas fa-trash-alt mr-1"></i>Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Details Popup -->
+    <div id="staffDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-lg p-6 w-full max-w-xl shadow-2xl border-2 border-indigo-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-indigo-800">Staff Details</h3>
+                <button onclick="closeStaffDetailsModal()" class="text-indigo-600 hover:text-indigo-800 transition-colors duration-200">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white p-3 rounded-lg border-2 border-indigo-100 shadow-sm">
+                    <p class="text-xs font-semibold text-indigo-600 mb-1">School ID</p>
+                    <p id="detailSchoolId" class="text-sm text-gray-800 border-b-2 border-indigo-100 pb-1"></p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border-2 border-indigo-100 shadow-sm">
+                    <p class="text-xs font-semibold text-indigo-600 mb-1">Staff ID</p>
+                    <p id="detailStaffId" class="text-sm text-gray-800 border-b-2 border-indigo-100 pb-1"></p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border-2 border-indigo-100 shadow-sm">
+                    <p class="text-xs font-semibold text-indigo-600 mb-1">Staff Name</p>
+                    <p id="detailStaffName" class="text-sm text-gray-800 border-b-2 border-indigo-100 pb-1"></p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border-2 border-indigo-100 shadow-sm">
+                    <p class="text-xs font-semibold text-indigo-600 mb-1">Standard</p>
+                    <p id="detailStandard" class="text-sm text-gray-800 border-b-2 border-indigo-100 pb-1"></p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border-2 border-indigo-100 shadow-sm">
+                    <p class="text-xs font-semibold text-indigo-600 mb-1">Staff Aadhar</p>
+                    <p id="detailAadhar" class="text-sm text-gray-800 border-b-2 border-indigo-100 pb-1"></p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border-2 border-indigo-100 shadow-sm">
+                    <p class="text-xs font-semibold text-indigo-600 mb-1">Qualification</p>
+                    <p id="detailQualification" class="text-sm text-gray-800 border-b-2 border-indigo-100 pb-1"></p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border-2 border-indigo-100 shadow-sm">
+                    <p class="text-xs font-semibold text-indigo-600 mb-1">Date of Joining</p>
+                    <p id="detailDoj" class="text-sm text-gray-800 border-b-2 border-indigo-100 pb-1"></p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border-2 border-indigo-100 shadow-sm">
+                    <p class="text-xs font-semibold text-indigo-600 mb-1">Staff Email</p>
+                    <p id="detailEmail" class="text-sm text-gray-800 border-b-2 border-indigo-100 pb-1"></p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border-2 border-indigo-100 shadow-sm">
+                    <p class="text-xs font-semibold text-indigo-600 mb-1">Staff Mobile Number</p>
+                    <p id="detailMobile" class="text-sm text-gray-800 border-b-2 border-indigo-100 pb-1"></p>
+                </div>
+                <div class="bg-white p-3 rounded-lg border-2 border-indigo-100 shadow-sm">
+                    <p class="text-xs font-semibold text-indigo-600 mb-1">Gender</p>
+                    <p id="detailGender" class="text-sm text-gray-800 border-b-2 border-indigo-100 pb-1"></p>
+                </div>
+            </div>
+            <div class="mt-4 flex justify-end space-x-3">
+                <button onclick="closeStaffDetailsModal()" class="px-3 py-1.5 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors duration-200 text-sm">
+                    Close
+                </button>
+                <button onclick="openUpdateModalFromDetails()" class="px-3 py-1.5 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-200 text-sm">
+                    <i class="fas fa-edit mr-1"></i>Update Details
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <!-- <img src="./assects/images/schoolname.avif" alt="School Logo" class="h-16 w-16 object-contain mb-4"> -->
+                    <h3 class="text-xl font-bold mb-4">Greenwood High School</h3>
+                    <p class="text-gray-400 mb-4">Providing quality education since 1995. Our mission is to nurture young minds and prepare them for the future.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Admissions</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Academics</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
+                            <span>123 Education Ave, Greenwood, CA 90210</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-2"></i>
+                            <span>(555) 123-4567</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2"></i>
+                            <span>info@greenwoodhigh.edu</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                  <h4 class="text-lg font-semibold mb-4">Follow us </h4>
+                    <div class=" space-x-4">
+                      <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                      <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                      <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                      <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube"></i></a>
+                  </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-center items-center">
+     
+                <p>&copy; 2025 &nbsp;Greenwood High School. All rights reserved.</p>
+                <p>&nbsp; | &nbsp;</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Update Modal -->
+    <div id="updateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-lg p-8 w-full max-w-2xl shadow-2xl border-2 border-indigo-200">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-indigo-800">Update Staff Details</h3>
+                <button onclick="closeUpdateModal()" class="text-indigo-600 hover:text-indigo-800 transition-colors duration-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="updateForm" class="space-y-6">
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-indigo-700 uppercase mb-1">
+                            School ID <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="updateSchoolId" class="w-full px-4 py-2 rounded-lg border-2 border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 bg-gray-100 cursor-not-allowed" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-indigo-700 uppercase mb-1">
+                            Staff ID <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="updateStaffId" class="w-full px-4 py-2 rounded-lg border-2 border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 bg-gray-100 cursor-not-allowed" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-indigo-700 uppercase mb-1">
+                            Staff Name <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="update_staff_name" id="updateStaffName" class="w-full px-4 py-2 rounded-lg border-2 border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Standard</label>
+                        <div class="relative w-full" id="custom-standard-dropdown">
+                            <button type="button" id="dropdownButton" class="w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-primary-500 flex justify-between items-center">
+                                <span id="selectedOption">Select Standard</span>
+                                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <ul id="dropdownMenu" class="hidden absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg">
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Nursery</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">LKG</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">UKG</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">1A</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">1B</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">2A</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">2B</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">3A</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">3B</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">4A</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">4B</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">5A</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">5B</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">6A</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">6B</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">7A</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">7B</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">8A</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">8B</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">9A</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">9B</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">10A</li>
+                                <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">10B</li>
+                            </ul>
+                            <input type="hidden" name="update_standard" id="standardInput" required>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-indigo-700 uppercase mb-1">
+                            Staff Aadhar <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="update_staff_aadhar" id="updateAadhar" class="w-full px-4 py-2 rounded-lg border-2 border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-indigo-700 uppercase mb-1">
+                            Qualification <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="update_qualification" id="updateQualification" class="w-full px-4 py-2 rounded-lg border-2 border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-indigo-700 uppercase mb-1">
+                            Date of Joining <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" name="update_date_of_joining" id="updateDoj" class="w-full px-4 py-2 rounded-lg border-2 border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-indigo-700 uppercase mb-1">
+                            Staff Email <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" name="update_staff_email" id="updateEmail" class="w-full px-4 py-2 rounded-lg border-2 border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-indigo-700 uppercase mb-1">
+                            Staff Mobile Number <span class="text-red-500">*</span>
+                        </label>
+                        <input type="tel" name="update_staff_mobile" id="updateMobile" class="w-full px-4 py-2 rounded-lg border-2 border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-indigo-700 uppercase mb-1">
+                            Gender <span class="text-red-500">*</span>
+                        </label>
+                        <select name="update_gender" id="updateGender" class="w-full px-4 py-2 rounded-lg border-2 border-indigo-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 bg-white">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-4 mt-8">
+                    <button type="button" onclick="closeUpdateModal()" class="px-6 py-2 bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700 rounded-lg hover:from-gray-300 hover:to-gray-400 transition-all duration-200 font-medium shadow-md">
+                        Cancel
+                    </button>
+                    <button type="button" onclick="saveUpdate()" class="px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-md">
+                        <i class="fas fa-save mr-2"></i>Update
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+   <!-- JavaScript for Dropdown and Update Modal -->
+   <script>
+    tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#f0f9ff",
+                100: "#e0f2fe",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                700: "#0369a1",
+              },
+              secondary: {
+                50: "#f8fafc",
+                100: "#f1f5f9",
+                500: "#64748b",
+                600: "#475569",
+                700: "#334155",
+              },
+            },
+          },
+        },
+      };
+      
+      const profileDropdown = document.getElementById("profileDropdown");
+      const dropdownMenu = document.getElementById("dropdownMenu");
+      const updateModal = document.getElementById("updateModal");
+
+
+      // Custom dropdown for Standard
+const standardDropdownButton = document.getElementById('dropdownButton');
+const standardDropdownMenu = document.querySelector('#custom-standard-dropdown #dropdownMenu');
+const standardSelectedOption = document.getElementById('selectedOption');
+const standardInput = document.getElementById('standardInput');
+
+standardDropdownButton.addEventListener('click', function(e) {
+    e.stopPropagation();
+    standardDropdownMenu.classList.toggle('hidden');
+});
+standardDropdownMenu.querySelectorAll('li').forEach(function(item) {
+    item.addEventListener('click', function() {
+        standardSelectedOption.textContent = this.textContent;
+        standardInput.value = this.textContent;
+        standardDropdownMenu.classList.add('hidden');
+    });
+});
+window.addEventListener('click', function(e) {
+    if (!standardDropdownButton.contains(e.target)) {
+        standardDropdownMenu.classList.add('hidden');
+    }
+});
+      
+      // Function to show confirmation toast
+      function showConfirmationToast(message, onConfirm) {
+        const toast = Toastify({
+          text: message,
+          duration: -1, // Don't auto-dismiss
+          gravity: "top",
+          position: "right",
+          backgroundColor: "#4CAF50",
+          style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "10px 20px",
+          },
+        }).showToast();
+      
+        // Create button container
+        const buttonContainer = document.createElement("div");
+        buttonContainer.style.cssText = `
+                  display: flex;
+                  gap: 10px;
+                  margin-left: 10px;
+              `;
+      
+        // Add Yes button
+        const yesButton = document.createElement("button");
+        yesButton.textContent = "Yes";
+        yesButton.style.cssText = `
+                  background: white;
+                  color: #00b09b;
+                  padding: 5px 15px;
+                  border-radius: 4px;
+                  cursor: pointer;
+                  border: none;
+                  font-weight: bold;
+              `;
+        yesButton.onclick = (e) => {
+          e.stopPropagation();
+          toast.hideToast();
+          onConfirm(true);
+        };
+      
+        // Add No button
+        const noButton = document.createElement("button");
+        noButton.textContent = "No";
+        noButton.style.cssText = `
+                  background: white;
+                  color: #ff4444;
+                  padding: 5px 15px;
+                  border-radius: 4px;
+                  cursor: pointer;
+                  border: none;
+                  font-weight: bold;
+              `;
+        noButton.onclick = (e) => {
+          e.stopPropagation();
+          toast.hideToast();
+          onConfirm(false);
+        };
+      
+        // Add buttons to container
+        buttonContainer.appendChild(yesButton);
+        buttonContainer.appendChild(noButton);
+      
+        // Add container to toast
+        const toastElement = document.querySelector(".toastify");
+        toastElement.appendChild(buttonContainer);
+      }
+      
+      profileDropdown.addEventListener("click", () => {
+        dropdownMenu.classList.toggle("hidden");
+      });
+      
+      // Close dropdown when clicking outside
+      window.addEventListener("click", (e) => {
+        if (!profileDropdown.contains(e.target)) {
+          dropdownMenu.classList.add("hidden");
+        }
+      });
+      
+      function deleteStaff(button) {
+        const row = button.closest("tr");
+        const staffId = row.cells[0].textContent;
+        const form = button.closest("form");
+      
+        showConfirmationToast(
+          `Are you sure you want to delete staff ID ${staffId}?`,
+          (confirmed) => {
+            if (confirmed) {
+              // Submit the form to call Flask backend
+              form.submit();
+      
+              // Optionally show toast immediately (or move to Flask response)
+              Toastify({
+                text: `Deleting staff ID ${staffId}...`,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#4CAF50",
+                style: {
+                  background: "linear-gradient(to right, #00b09b, #96c93d)",
+                },
+              }).showToast();
+            }
+          }
+        );
+      }
+      
+      function openUpdateModal(button) {
+        const row = button.closest("tr");
+        const cells = row.cells;
+      
+        document.getElementById("updateSchoolId").value =
+          cells[0].getAttribute("data-school-id") || ""; // Add if data attr is used
+        document.getElementById("updateStaffId").value = cells[1].textContent;
+        document.getElementById("updateStaffName").value = cells[2].textContent;
+        document.getElementById("updateQualification").value = cells[3].textContent;
+        document.getElementById("updateDoj").value = cells[4].textContent;
+        document.getElementById("updateEmail").value = cells[5].textContent;
+        document.getElementById("updateMobile").value = cells[6].textContent;
+        document.getElementById("updateAadhar").value = cells[7].textContent;
+        document.getElementById("updateGender").value = cells[8].textContent;
+      
+        updateModal.classList.remove("hidden");
+      }
+      function closeUpdateModal() {
+        updateModal.classList.add("hidden");
+      }
+      
+      function saveUpdate() {
+        const staffId = document.getElementById("updateStaffId").value;
+        const form = document.getElementById("updateForm");
+        const formData = new FormData(form);
+        const updateButton = document.querySelector('button[onclick="saveUpdate()"]');
+      
+        // Disable the button to prevent multiple clicks
+        updateButton.disabled = true;
+        updateButton.innerText = "Updating...";
+      
+        fetch(`/update_staff/${staffId}`, {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            if (response.redirected) {
+              // Show toast first, then redirect
+              Toastify({
+                text: "Data updated successfully",
+                duration: 2000,
+                gravity: "top",
+                position: "right",
+                style: {
+                  background: "linear-gradient(to right, #00b09b, #96c93d)",
+                },
+              }).showToast();
+      
+              setTimeout(() => {
+                window.location.href = response.url;
+              }, 1500);
+            } else if (response.ok) {
+              Toastify({
+                text: "Data updated successfully",
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                style: {
+                  background: "linear-gradient(to right, #00b09b, #96c93d)",
+                },
+              }).showToast();
+              closeUpdateModal();
+            } else {
+              return response.text().then((text) => {
+                console.error("Update failed:", text);
+                alert("Failed to update staff details.");
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error during update:", error);
+            alert("An unexpected error occurred.");
+          })
+          .finally(() => {
+            // Re-enable the button
+            updateButton.disabled = false;
+            updateButton.innerHTML = '<i class="fas fa-save mr-2"></i>Update';
+          });
+      }
+      
+      // Close modal when clicking outside
+      window.addEventListener("click", (e) => {
+        if (e.target === updateModal) {
+          closeUpdateModal();
+        }
+      });
+      
+      // Function to show staff details in popup
+      function showStaffDetails(button) {
+        // Read values from data attributes
+        const dataset = button.dataset;
+      
+        document.getElementById("detailSchoolId").textContent =
+          dataset.schoolId || "";
+        document.getElementById("detailStaffId").textContent = dataset.staffId || "";
+        document.getElementById("detailStaffName").textContent = dataset.name || "";
+        document.getElementById("detailStandard").textContent =
+          dataset.standard || "";
+        document.getElementById("detailAadhar").textContent = dataset.aadhar || "";
+        document.getElementById("detailQualification").textContent =
+          dataset.qualification || "";
+        document.getElementById("detailDoj").textContent = dataset.doj || "";
+        document.getElementById("detailEmail").textContent = dataset.email || "";
+        document.getElementById("detailMobile").textContent = dataset.mobile || "";
+        document.getElementById("detailGender").textContent = dataset.gender || "";
+      
+        // Show modal
+        document.getElementById("staffDetailsModal").classList.remove("hidden");
+      }
+      
+      function closeStaffDetailsModal() {
+        document.getElementById("staffDetailsModal").classList.add("hidden");
+      }
+      
+      function openUpdateModalFromDetails() {
+        // Get values from the details modal
+        const schoolId = document.getElementById("detailSchoolId").textContent;
+        const staffId = document.getElementById("detailStaffId").textContent;
+        const staffName = document.getElementById("detailStaffName").textContent;
+        const standard = document.getElementById("detailStandard").textContent;
+        const aadhar = document.getElementById("detailAadhar").textContent;
+        const qualification = document.getElementById("detailQualification").textContent;
+        const doj = document.getElementById("detailDoj").textContent;
+        const email = document.getElementById("detailEmail").textContent;
+        const mobile = document.getElementById("detailMobile").textContent;
+        const gender = document.getElementById("detailGender").textContent;
+      
+        // Set values in the update modal
+        document.getElementById("updateSchoolId").value = schoolId;
+        document.getElementById("updateStaffId").value = staffId;
+        document.getElementById("updateStaffName").value = staffName;
+        document.getElementById("standardInput").value = standard;
+        document.getElementById("selectedOption").textContent = standard;
+        document.getElementById("updateAadhar").value = aadhar;
+        document.getElementById("updateQualification").value = qualification;
+        document.getElementById("updateDoj").value = doj;
+        document.getElementById("updateEmail").value = email;
+        document.getElementById("updateMobile").value = mobile;
+        document.getElementById("updateGender").value = gender;
+      
+        // Close the details modal and open the update modal
+        closeStaffDetailsModal();
+        document.getElementById("updateModal").classList.remove("hidden");
+      }
+      
+      // Update the PDF download function
+      function downloadPDF() {
+        const container = document.createElement("div");
+        container.style.padding = "20px";
+      
+        // Header
+        const header = document.createElement("div");
+        header.style.textAlign = "center";
+        header.style.marginBottom = "30px";
+      
+        // // LOGO
+        // const logo = document.createElement('div');
+        // logo.innerHTML = `
+        //     <svg class="w-12 h-12 mx-auto text-yellow-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        //         <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" fill="currentColor"/>
+        //     </svg>`;
+        // header.appendChild(logo);
+      
+        const schoolName = document.createElement("h1");
+        schoolName.textContent = "Greenwood High School";
+        schoolName.style.fontSize = "24px";
+        schoolName.style.fontWeight = "bold";
+        schoolName.style.color = "#333";
+        schoolName.style.marginTop = "10px";
+        header.appendChild(schoolName);
+      
+        const subtitle = document.createElement("p");
+        subtitle.textContent = "Staff Details Report";
+        subtitle.style.fontSize = "16px";
+        subtitle.style.color = "#666";
+        subtitle.style.marginTop = "5px";
+        header.appendChild(subtitle);
+      
+        container.appendChild(header);
+      
+        // Date
+        const dateDiv = document.createElement("div");
+        dateDiv.style.textAlign = "right";
+        dateDiv.style.marginBottom = "20px";
+        dateDiv.style.color = "#666";
+        dateDiv.textContent = "Generated on: " + new Date().toLocaleDateString();
+        container.appendChild(dateDiv);
+      
+        // Table
+        const table = document.createElement("table");
+        table.style.width = "100%";
+        table.style.borderCollapse = "collapse";
+        table.style.marginTop = "20px";
+        table.style.fontSize = "12px";
+      
+        const headers = [
+          "Staff ID",
+          "Staff Name",
+          "Standard",
+          "Staff Aadhar",
+          "Qualification",
+          "Date of Joining",
+          "Staff Email",
+          "Staff Mobile Number",
+          "Gender",
+        ];
+        const headerRow = document.createElement("tr");
+        headers.forEach((headerText) => {
+          const th = document.createElement("th");
+          th.textContent = headerText;
+          th.style.border = "1px solid #ddd";
+          th.style.padding = "12px 8px";
+          th.style.backgroundColor = "#f5f5f5";
+          th.style.textAlign = "left";
+          th.style.fontWeight = "bold";
+          th.style.color = "#333";
+          headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+      
+        // Extract data from HTML table
+        const tableRows = document.querySelectorAll("#staffTable tbody tr");
+      
+        tableRows.forEach((row) => {
+          const cells = row.querySelectorAll("td");
+          const staffId = cells[0].innerText.trim();
+          const button = cells[1].querySelector("button");
+      
+          const name = button.dataset.name || "";
+          const standard = button.dataset.standard || "";
+          const aadhar = button.dataset.aadhar || "";
+          const qualification = button.dataset.qualification || "";
+          const doj = button.dataset.doj || "";
+          const email = button.dataset.email || "";
+          const mobile = button.dataset.mobile || "";
+          const gender = button.dataset.gender || "";
+      
+          const data = [
+            staffId,
+            name,
+            standard,
+            aadhar,
+            qualification,
+            doj,
+            email,
+            mobile,
+            gender,
+          ];
+      
+          const dataRow = document.createElement("tr");
+          data.forEach((item) => {
+            const td = document.createElement("td");
+            td.textContent = item;
+            td.style.border = "1px solid #ddd";
+            td.style.padding = "12px 8px";
+            td.style.textAlign = "left";
+            dataRow.appendChild(td);
+          });
+          table.appendChild(dataRow);
+        });
+      
+        container.appendChild(table);
+      
+        // Footer
+        const footer = document.createElement("div");
+        footer.style.marginTop = "30px";
+        footer.style.textAlign = "center";
+        footer.style.color = "#666";
+        footer.style.fontSize = "12px";
+        footer.innerHTML = "This is a computer-generated document.";
+        container.appendChild(footer);
+      
+        // Generate PDF
+        const opt = {
+          margin: [0.5, 0.5, 0.5, 0.5],
+          filename: "staff_details.pdf",
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: "in", format: "letter", orientation: "landscape" },
+        };
+      
+        html2pdf().set(opt).from(container).save();
+      }
+      
+      // Close staff details modal when clicking outside
+      window.addEventListener("click", (e) => {
+        const modal = document.getElementById("staffDetailsModal");
+        if (e.target === modal) {
+          closeStaffDetailsModal();
+        }
+      });
+   </script>
+
+ 
+</body>
+</html>

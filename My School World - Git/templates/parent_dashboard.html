@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parent Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      /* Custom scrollbar styles */
+      .scrollbar-thin::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .scrollbar-thin::-webkit-scrollbar-track {
+        background: rgba(88, 28, 135, 0.3);
+        border-radius: 3px;
+      }
+
+      .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: rgba(168, 85, 247, 0.5);
+        border-radius: 3px;
+      }
+
+      .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+        background: rgba(168, 85, 247, 0.7);
+      }
+
+      /* Add these styles for the ripple effect */
+      #profileDropdown {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .ripple {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        pointer-events: none;
+      }
+
+      @keyframes ripple {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header
+      class="sticky top-0 z-50 bg-gradient-to-r from-slate-800 to-slate-900 shadow-lg border-b border-gray-200"
+    >
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+          <!-- School Logo and Name -->
+          <div class="flex items-center space-x-3">
+            <svg
+              class="w-8 h-8 text-yellow-400"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div class="flex flex-col items-end">
+              <h1
+                class="text-base sm:text-lg md:text-2xl lg:text-3xl font-extrabold text-yellow-400"
+              >
+                Greenwood High School
+              </h1>
+              <p
+                class="text-[10px] sm:text-xs md:text-sm lg:text-base text-gray-100 text-right mt-1"
+              >
+                Excellence in Education
+              </p>
+            </div>
+          </div>
+          <!-- Desktop Buttons -->
+          <div class="hidden md:flex items-center space-x-4">
+            <form action="{{ url_for('logout') }}">
+              <button
+                id="profileDropdown"
+                class="flex items-center space-x-2 text-white px-4 py-2 rounded bg-red-600 text-sm font-semibold hover:bg-red-800 active:bg-red-900 active:scale-95 transform transition-all duration-200 shadow-md hover:shadow-lg"
+              >
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+              </button>
+            </form>
+          </div>
+          <!-- Mobile Menu Button -->
+          <button class="md:hidden text-yellow-400" onclick="toggleMenu()">
+            <svg
+              class="w-6 h-6"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div
+      id="mobileMenu"
+      class="hidden fixed inset-0 z-50 bg-black bg-opacity-50"
+    >
+      <div
+        class="absolute right-0 top-0 h-full w-64 backdrop-blur-sm bg-white/30 p-4"
+      >
+        <button
+          onclick="toggleMenu()"
+          class="absolute top-4 right-4 text-white"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <nav class="mt-12 space-y-4">
+          <a
+            href="{{ url_for('child_info') }}"
+            class="flex items-center p-3 bg-purple-600 text-white hover:bg-purple-800 rounded"
+          >
+            <i class="fas fa-user text-xl w-6 text-center"></i>
+            <span class="ml-3">Child Info</span>
+          </a>
+          <a
+            href="{{ url_for('child_results') }}"
+            class="flex items-center p-3 bg-purple-600 text-white hover:bg-purple-800 rounded"
+          >
+            <i class="fas fa-chart-bar text-xl w-6 text-center"></i>
+            <span class="ml-3">Child Results</span>
+          </a>
+          <a
+            href="{{ url_for('child_time_tables') }}"
+            class="flex items-center p-3 bg-purple-600 text-white hover:bg-purple-800 rounded"
+          >
+            <i class="fas fa-calendar-alt text-xl w-6 text-center"></i>
+            <span class="ml-3">Time Tables</span>
+          </a>
+          <a
+            href="{{ url_for('parents_help_desk') }}"
+            class="flex items-center p-3 bg-purple-600 text-white hover:bg-purple-800 rounded"
+          >
+            <i class="fas fa-headset text-xl w-6 text-center"></i>
+            <span class="ml-3">Help Desk</span>
+          </a>
+          <a
+            href="{{ url_for('raised_complaints') }}"
+            class="flex items-center p-3 rounded hover:bg-purple-800 transition group/item nav-link"
+          >
+            <i class="fas fa-comment-dots text-xl w-6 text-center"></i>
+            <span
+              class="ml-4 whitespace-nowrap overflow-hidden group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+              >Complaints Raised</span
+            >
+          </a>
+          <a
+            href="{{ url_for('child_materials') }}"
+            class="flex items-center p-3 bg-purple-600 text-white hover:bg-purple-800 rounded"
+          >
+            <i class="fas fa-book text-xl w-6 text-center"></i>
+            <span class="ml-3">Study Materials</span>
+          </a>
+          <a
+            href="{{ url_for('child_question_papers') }}"
+            class="flex items-center p-3 bg-purple-600 text-white hover:bg-purple-800 rounded"
+          >
+            <i class="fas fa-tasks text-xl w-6 text-center"></i>
+            <span class="ml-3">Question Papers</span>
+          </a>
+          <a
+            href="{{ url_for('logout') }}"
+            class="flex items-center p-3 bg-red-600 text-white hover:bg-red-800 rounded"
+          >
+            <i class="fas fa-sign-out-alt text-xl w-6 text-center"></i>
+            <span class="ml-3">Logout</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside
+      class="hidden md:block fixed left-0 top-[64px] h-[calc(100vh-64px)] bg-purple-700 text-white transition-all duration-300 ease-in-out hover:w-64 w-20 group z-40 sidebar-scroll"
+    >
+      <!-- <h2 class="text-2xl font-bold my-8 whitespace-nowrap overflow-hidden group-hover:opacity-100 opacity-0 transition-opacity duration-300 px-24">Welcome <span class="text-white  font-bold">,</span></h2> -->
+      <nav
+        class="space-y-2 overflow-y-auto mt-10 flex-grow scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-purple-700 max-h-[550px]"
+      >
+        <a
+          href="{{ url_for('child_info') }}"
+          class="flex items-center p-3 rounded hover:bg-purple-800 transition group/item nav-link"
+        >
+          <i class="fas fa-user text-xl w-6 text-center"></i>
+          <span
+            class="ml-4 whitespace-nowrap overflow-hidden group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+            >Child Info</span
+          >
+        </a>
+        <a
+          href="{{ url_for('child_results') }}"
+          class="flex items-center p-3 rounded hover:bg-purple-800 transition group/item nav-link"
+        >
+          <i class="fas fa-chart-bar text-xl w-6 text-center"></i>
+          <span
+            class="ml-4 whitespace-nowrap overflow-hidden group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+            >Child Results</span
+          >
+        </a>
+        <a
+          href="{{ url_for('child_time_tables') }}"
+          class="flex items-center p-3 rounded hover:bg-purple-800 transition group/item nav-link"
+        >
+          <i class="fas fa-calendar-alt text-xl w-6 text-center"></i>
+          <span
+            class="ml-4 whitespace-nowrap overflow-hidden group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+            >Time Tables</span
+          >
+        </a>
+        <a
+          href="{{ url_for('parents_help_desk') }}"
+          class="flex items-center p-3 rounded hover:bg-purple-800 transition group/item nav-link"
+        >
+          <i class="fas fa-headset text-xl w-6 text-center"></i>
+          <span
+            class="ml-4 whitespace-nowrap overflow-hidden group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+            >Help Desk</span
+          >
+        </a>
+        <a
+          href="{{ url_for('raised_complaints') }}"
+          class="flex items-center p-3 rounded hover:bg-purple-800 transition group/item nav-link"
+        >
+          <i class="fas fa-comment-dots text-xl w-6 text-center"></i>
+          <span
+            class="ml-4 whitespace-nowrap overflow-hidden group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+            >Complaints Raised</span
+          >
+        </a>
+        <a
+          href="{{ url_for('child_materials') }}"
+          class="flex items-center p-3 rounded hover:bg-purple-800 transition group/item nav-link"
+        >
+          <i class="fas fa-book text-xl w-6 text-center"></i>
+          <span
+            class="ml-4 whitespace-nowrap overflow-hidden group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+            >Study Materials</span
+          >
+        </a>
+        <a
+          href="{{ url_for('child_question_papers') }}"
+          class="flex items-center p-3 rounded hover:bg-purple-800 transition group/item nav-link"
+        >
+          <i class="fas fa-book text-xl w-6 text-center"></i>
+          <span
+            class="ml-4 whitespace-nowrap overflow-hidden group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+            >Question Papers</span
+          >
+        </a>
+        <a
+          href="{{ url_for('logout') }}"
+          class="flex items-center p-3 rounded hover:bg-red-800 transition group/item"
+        >
+          <i class="fas fa-sign-out-alt text-xl w-6 text-center"></i>
+          <span
+            class="ml-4 whitespace-nowrap overflow-hidden group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+            >Logout</span
+          >
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div
+      class="flex-1 transition-all duration-300 ease-in-out md:ml-20 group-hover:md:ml-64 bg-white relative h-[calc(100vh-64px)]"
+    >
+      <!-- Main Content -->
+      <main class="h-full">
+        <div class="h-full w-full px-4 flex flex-col overflow-hidden">
+          <!-- Welcome Message -->
+          <div class="flex-none">
+            <h2 class="text-2xl font-bold text-secondary-700 py-4">
+              {% if parent %} Welcome,
+              <span class="text-blue-600">{{ parent[0] }}'s </span>
+              Parent/Guardian {% endif %}
+            </h2>
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div class="flex-none flex justify-between items-center mb-4">
+            <button
+              id="prevBtn"
+              class="flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            >
+              <i class="fas fa-chevron-left mr-2"></i>
+              Previous
+            </button>
+            <button
+              id="nextBtn"
+              class="flex items-center px-4 py-2 bg-gradient-to-r from-pink-600 to-orange-500 text-white rounded-lg hover:from-pink-700 hover:to-orange-600 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            >
+              Next
+              <i class="fas fa-chevron-right ml-2"></i>
+            </button>
+          </div>
+
+          <!-- Content iframe -->
+          <div
+            class="flex-1 bg-white rounded-2xl border-2 border-gray-300 shadow-lg min-h-0 h-[calc(100vh-80px)]"
+          >
+            <iframe
+              id="contentFrame"
+              class="w-full h-[calc(79vh-70px)] rounded-lg border-0 overflow-y-auto"
+              src="https://png.pngtree.com/background/20210709/original/pngtree-school-season-welcome-new-students-blackboard-hand-painted-picture-image_923676.jpg"
+              title="Dashboard Content"
+              scrolling="yes"
+            ></iframe>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="../static/js/parent_dashboard.js"></script>
+  </body>
+</html>
